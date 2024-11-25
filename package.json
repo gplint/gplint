@@ -3,13 +3,13 @@
   "version": "2.1.0",
   "description": "A Gherkin linter/validator written in javascript.",
   "author": "Luis Zurro",
-  "homepage": "https://github.com/Nyaran/gplint#readme",
+  "homepage": "https://github.com/gplint/gplint#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Nyaran/gplint"
+    "url": "https://github.com/gplint/gplint"
   },
   "bugs": {
-    "url": "https://github.com/Nyaran/gplint/issues"
+    "url": "https://github.com/gplint/gplint/issues"
   },
   "funding": [
     {
@@ -54,12 +54,12 @@
     "@cucumber/gherkin": "30.0.4",
     "@cucumber/gherkin-streams": "5.0.1",
     "chalk": "5.3.0",
-    "glob": "10.4.2",
+    "glob": "11.0.0",
     "lodash": "4.17.21",
     "strip-ansi": "7.1.0",
     "strip-json-comments": "5.0.1",
     "text-table": "0.2.0",
-    "ts-node": "10.9.2",
+    "ts-node": "^10.9.2",
     "xml-js": "1.6.11",
     "yargs": "17.7.2"
   },

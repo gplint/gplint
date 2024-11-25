@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { GherkinData, GherkinTaggable, RuleError } from '../types.js';
+import {Documentation, GherkinData, GherkinTaggable, RuleError} from '../types.js';
 import { featureSpread } from './utils/gherkin.js';
 
 export const name = 'one-space-between-tags';
@@ -49,3 +49,15 @@ function testTags(node: GherkinTaggable, errors: RuleError[]) {
 				});
 		});
 }
+
+export const documentation: Documentation = {
+	description: 'Tags on the same line must be separated by a single space.',
+	fixable: false,
+	examples: [{
+		title: 'Example',
+		description: 'Enable rule',
+		config: {
+			[name]: 'error',
+		}
+	}],
+};

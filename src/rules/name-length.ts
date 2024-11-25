@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {GherkinData, RuleError, RuleSubConfig} from '../types.js';
+import {Documentation, GherkinData, RuleError, RuleSubConfig} from '../types.js';
 import {Background, Location, Scenario} from '@cucumber/messages';
 import { featureSpread } from './utils/gherkin.js';
 
@@ -59,3 +59,36 @@ export function run({feature}: GherkinData, configuration: Configuration): RuleE
 
 	return errors;
 }
+
+export const documentation: Documentation = {
+	description: 'Allows restricting length of Feature/Scenario/Step names. The default is 70 characters for each of these',
+	fixable: false,
+	configuration: [{
+		name: 'feature',
+		type: 'number',
+		description: 'Defines de maximum line length for Feature level.',
+		default: availableConfigs.Feature,
+	}, {
+		name: 'rule',
+		type: 'number',
+		description: 'Defines de maximum line length for Rule level.',
+		default: availableConfigs.Rule,
+	}, {
+		name: 'Step',
+		type: 'number',
+		description: 'Defines de maximum line length for Step level.',
+		default: availableConfigs.Step,
+	}, {
+		name: 'scenario',
+		type: 'number',
+		description: 'Defines de maximum line length for Scenario level.',
+		default: availableConfigs.Scenario,
+	}],
+	examples: [{
+		title: 'Example',
+		description: 'Configure length for Feature, Scenario and Step',
+		config: {
+			[name]: ['error', { 'Feature': 30, 'Scenario': 50, 'Step': 100 }],
+		}
+	}],
+};

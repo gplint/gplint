@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { Feature, Rule } from '@cucumber/messages';
 import * as gherkinUtils from './utils/gherkin.js';
-import {GherkinData, GherkinTaggable, RuleError} from '../types.js';
+import {Documentation, GherkinData, GherkinTaggable, RuleError} from '../types.js';
 
 export const name = 'no-superfluous-tags';
 
@@ -52,3 +52,15 @@ function checkTags(child: GherkinTaggable, parents: GherkinTaggable[], language:
 		});
 	}
 }
+
+export const documentation: Documentation = {
+	description: 'Disallows tags present on a Node, its parents (E.g. Same tags in a Scenario and/or Example, and also on the Feature or Rule that contains it.',
+	fixable: false,
+	examples: [{
+		title: 'Example',
+		description: 'Enable rule',
+		config: {
+			[name]: 'error',
+		}
+	}],
+};

@@ -1,8 +1,18 @@
-import { Background, DocString, Examples, Feature, Rule, Scenario, Step, StepKeywordType, TableCell } from '@cucumber/messages';
+import {
+	Background,
+	DocString,
+	Examples,
+	Feature,
+	Rule,
+	Scenario,
+	Step,
+	StepKeywordType,
+	TableCell,
+} from '@cucumber/messages';
 
 import * as gherkinUtils from './utils/gherkin.js';
-import {GherkinData, RuleSubConfig, RuleError, GherkinKeyworded} from '../types.js';
-import { featureSpread } from './utils/gherkin.js';
+import {featureSpread} from './utils/gherkin.js';
+import {Documentation, GherkinData, GherkinKeyworded, RuleError, RuleSubConfig} from '../types.js';
 
 interface IConfiguration<T> {
 	Global?: T[]
@@ -58,7 +68,10 @@ export function run({feature}: GherkinData, configuration: Configuration): RuleE
 	// Check the feature itself
 	checkNameAndDescription(feature, restrictedPatterns, language, errors);
 
-	const {children, rules} = featureSpread(feature);
+	const {
+		children,
+		rules,
+	} = featureSpread(feature);
 
 	rules.forEach(rule => {
 		checkNameAndDescription(rule, restrictedPatterns, language, errors);
@@ -99,7 +112,7 @@ export function run({feature}: GherkinData, configuration: Configuration): RuleE
 		}
 	});
 	return errors.filter((obj, index, self) =>
-		index === self.findIndex((el) => el.message === obj.message)
+		index === self.findIndex((el) => el.message === obj.message),
 	);
 }
 
@@ -146,7 +159,7 @@ function checkStepNode(
 	parentNode: Background | Scenario | Step,
 	restrictedPatterns: ConfigurationPatternsLowerCase,
 	language: string,
-	errors: RuleError[]
+	errors: RuleError[],
 ) {
 	// Use the node keyword of the parent to determine which rule configuration to use
 	getRestrictedPatternsForNode(parentNode, restrictedPatterns, language)
@@ -193,7 +206,7 @@ function check(node: GherkinKeyworded | TableCell | DocString, type: string, pro
 		// with a sentinel, split lines and then restore the doubly escaped new line
 		const escapedNewLineSentinel = '<!gplint new line sentinel!>';
 		const escapedNewLine = '\\n';
-		strings = (node as Feature|Rule|Scenario|Examples).description
+		strings = (node as Feature | Rule | Scenario | Examples).description
 			.replace(escapedNewLine, escapedNewLineSentinel)
 			.split('\n')
 			.map((str: string) => str.replace(escapedNewLineSentinel, escapedNewLine));
@@ -211,3 +224,120 @@ function check(node: GherkinKeyworded | TableCell | DocString, type: string, pro
 		}
 	}
 }
+
+export const documentation: Documentation = {
+	description: 'A list of patterns to disallow globally, or specifically in features, rules, backgrounds, scenarios, or scenario outlines, Steps. All patterns are treated as case-insensitive',
+	fixable: false,
+	configuration: [{
+		name: 'Global',
+		type: '(string|RegExp)[]',
+		description: 'Text patterns not allowed at any level',
+		default: availableConfigs.Global,
+	}, {
+		name: 'Feature',
+		type: '(string|RegExp)[]',
+		description: 'Text patterns not allowed at Feature level',
+		default: availableConfigs.Feature,
+	}, {
+		name: 'Rule',
+		type: '(string|RegExp)[]',
+		description: 'Text patterns not allowed at Rule level',
+		default: availableConfigs.Rule,
+	}, {
+		name: 'Background',
+		type: '(string|RegExp)[]',
+		description: 'Text patterns not allowed at Background level',
+		default: availableConfigs.Background,
+	}, {
+		name: 'Scenario',
+		type: '(string|RegExp)[]',
+		description: 'Text patterns not allowed at Scenario level',
+		default: availableConfigs.Scenario,
+	}, {
+		name: 'ScenarioOutline',
+		type: '(string|RegExp)[]',
+		description: 'Text patterns not allowed at ScenarioOutline level',
+		default: availableConfigs.ScenarioOutline,
+	}, {
+		name: 'Examples',
+		type: '(string|RegExp)[]',
+		description: 'Text patterns not allowed at Examples level',
+		default: availableConfigs.Examples,
+	}, {
+		name: 'ExampleHeader',
+		type: '(string|RegExp)[]',
+		description: 'Text patterns not allowed at ExampleHeader level',
+		default: availableConfigs.ExampleHeader,
+	}, {
+		name: 'ExampleBody',
+		type: '(string|RegExp)[]',
+		description: 'Text patterns not allowed at ExampleBody level',
+		default: availableConfigs.ExampleBody,
+	}, {
+		name: 'Step',
+		type: '(string|RegExp)[]',
+		description: 'Text patterns not allowed at Step level',
+		default: availableConfigs.Step,
+	}, {
+		name: 'Given',
+		type: '(string|RegExp)[]',
+		description: 'Text patterns not allowed at Given level',
+		default: availableConfigs.Given,
+	}],
+	examples: [{
+		title: 'Example',
+		description: 'Configure multiple patterns, mixing plain strings with RegExps',
+		config: {
+			[name]: ['error', {
+				'Global': [
+					'^globally restricted pattern',
+				],
+				'Feature': [
+					'poor description',
+					'validate',
+					'verify',
+				],
+				'Background': [
+					'show last response',
+					'a debugging step',
+				],
+				'Scenario': [
+					'show last response',
+					'a debugging step',
+				],
+				'Examples': [
+					'poor examples name',
+					'really bad examples description',
+				],
+				'ExampleHeader': [
+					'^.*disallowed.*$',
+				],
+				'ExampleBody': [
+					'^.*invalid.*$',
+				],
+				'Step': [
+					'bad step',
+				],
+				'Given': [
+					'bad step given',
+					'a debugging step given',
+				],
+				'When': [
+					'bad step when',
+					'a debugging step when',
+				],
+				'Then': [
+					'bad step then',
+					'a debugging step then',
+				],
+				'DocString': [
+					'^.*disallowed.*$',
+				],
+				'DataTable': [
+					'^.*invalid.*$',
+					'wrong value',
+				],
+			}],
+		},
+	}],
+};

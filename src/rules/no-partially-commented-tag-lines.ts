@@ -1,4 +1,4 @@
-import { GherkinData, GherkinTaggable, RuleError, RuleSubConfig } from '../types.js';
+import {Documentation, GherkinData, GherkinTaggable, RuleError, RuleSubConfig} from '../types.js';
 import { featureSpread } from './utils/gherkin.js';
 import _ from 'lodash';
 
@@ -63,3 +63,40 @@ export function run({file, feature}: GherkinData, configuration: RuleSubConfig<t
 
 	return errors;
 }
+
+export const documentation: Documentation = {
+	description: 'Disallows partially commented tag lines. You can configure if a comment is allowed if is separated with a space or not allowed at all.',
+	fixable: false,
+	configuration: [{
+		name: 'allowSeparated',
+		type: 'boolean',
+		description: 'Configure if a comment is allowed if is separated with a space',
+		default: availableConfigs.allowSeparated,
+	}],
+	examples: [{
+		title: 'Allow separated (Default)',
+		description: `The following table illustrates how it works:
+
+| Example         | Description                         | Result  |
+|-----------------|-------------------------------------|---------|
+| \`@foo\`          | Without a comment                   | Valid   |
+| \`@foo #comment\` | With a comment separated with space | Valid   |
+| \`@foo#comment\`  | With a comment non-separated        | Invalid |`,
+		config: {
+			[name]: ['error', {'allowSeparated': true}]
+		}
+	}, {
+		title: 'Not allow separated',
+		description: `The following table illustrates how it works:
+
+| Example         | Description                         | Result  |
+|-----------------|-------------------------------------|---------|
+| \`@foo\`          | Without a comment                   | Valid   |
+| \`@foo #comment\` | With a comment separated with space | Invalid |
+| \`@foo#comment\`  | With a comment non-separated        | Invalid |
+`,
+		config: {
+			[name]: ['error', {'allowSeparated': false}]
+		}
+	}],
+};

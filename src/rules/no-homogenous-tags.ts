@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {GherkinData,  RuleError} from '../types.js';
+import {Documentation, GherkinData, RuleError} from '../types.js';
 import { Examples, Feature, Rule, Scenario } from '@cucumber/messages';
 
 export const name = 'no-homogenous-tags';
@@ -71,3 +71,15 @@ function checkHomogenousContainer(container: Feature | Rule, errors: RuleError[]
 		});
 	}
 }
+
+export const documentation: Documentation = {
+	description: 'Disallows tags present on every Scenario/Rule in a Feature or Rule, rather than on the Feature/Rule itself. Skips if contains a single scenario.',
+	fixable: false,
+	examples: [{
+		title: 'Example',
+		description: 'Enable rule',
+		config: {
+			[name]: 'error',
+		}
+	}],
+};

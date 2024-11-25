@@ -1,7 +1,15 @@
 import _ from 'lodash';
 import {Feature, Pickle, Rule as CucumberRule} from '@cucumber/messages';
 import * as gherkinUtils from './utils/gherkin.js';
-import { GherkinData, GherkinKeyworded, GherkinNode, GherkinTaggable, RuleError, RuleSubConfig } from '../types.js';
+import {
+	Documentation,
+	GherkinData,
+	GherkinKeyworded,
+	GherkinNode,
+	GherkinTaggable,
+	RuleError,
+	RuleSubConfig,
+} from '../types.js';
 
 export const name = 'required-tags';
 export const availableConfigs = {
@@ -24,7 +32,10 @@ function checkTagNotPresent(requiredTag: string | string[], {tags}: GherkinTagga
 		}));
 }
 
-export function run({feature, pickles}: GherkinData, configuration: RuleSubConfig<typeof availableConfigs>): RuleError[] {
+export function run({
+	feature,
+	pickles,
+}: GherkinData, configuration: RuleSubConfig<typeof availableConfigs>): RuleError[] {
 	if (!feature) {
 		return [];
 	}
@@ -58,7 +69,10 @@ export function run({feature, pickles}: GherkinData, configuration: RuleSubConfi
 	checkRequiredTags(feature, mergedConfig.feature);
 
 	function iterScenarioContainer(item: Feature | CucumberRule, insideRule = false) {
-		for (const {rule, scenario} of (item as Feature).children) {
+		for (const {
+			rule,
+			scenario
+		} of (item as Feature).children) {
 			if (!insideRule && rule != null) {
 				checkRequiredTags(rule, mergedConfig.rule);
 
@@ -100,3 +114,76 @@ function createError(item: GherkinNode, requiredTags: string | string[], lang: s
 		column: item.location.column,
 	};
 }
+
+export const documentation: Documentation = {
+	description: `Require tags/patterns of tags. The properties for levels (global, feature, rule, scenario and example),
+are arrays, that allows strings, regular expressions and subarrays.
+If a subarray is used, only one of the tags inside the subarray is needed to accomplish the rule.`,
+	fixable: false,
+	configuration: [{
+		name: 'ignoreUntagged',
+		type: 'boolean',
+		description: 'Whether to ignore scenarios that have no tag.',
+		default: availableConfigs.ignoreUntagged.toString(),
+	}, {
+		name: 'global',
+		type: '(string | regexp | (string | regexp)[])[]',
+		description: 'The array of tag patterns that must match.',
+		default: availableConfigs.global.toString(),
+	}, {
+		name: 'feature',
+		type: '(string | regexp | (string | regexp)[])[]',
+		description: 'The array of tag patterns that must match.',
+		default: availableConfigs.feature.toString(),
+	}, {
+		name: 'rule',
+		type: '(string | regexp | (string | regexp)[])[]',
+		description: 'The array of tag patterns that must match',
+		default: availableConfigs.rule.toString(),
+	}, {
+		name: 'scenario',
+		type: '(string | regexp | (string | regexp)[])[]',
+		description: 'The array of tag patterns that must match.',
+		default: availableConfigs.scenario.toString(),
+	}, {
+		name: 'example',
+		type: '(string | regexp | (string | regexp)[])[]',
+		description: 'The array of tag patterns that must match.',
+		default: availableConfigs.example.toString(),
+	}, {
+		name: 'extendRule',
+		type: 'boolean',
+		description: 'When Scenario is not contained inside Rule, extends required `rule` tags to `scenario`.',
+		default: availableConfigs.extendRule.toString(),
+	}, {
+		name: 'extendExample',
+		type: 'boolean',
+		description: 'When Scenario is not a Scenario Outline, extends required `example` tags to `scenario`.',
+		default: availableConfigs.extendExample.toString(),
+	}],
+	examples: [{
+		title: 'Define required tags for feature level with a Regular Expression',
+		description: 'Enforce all features to have the tag `@Feat(<ID>)`, where `<ID>` is a 5 digits number. E.g. `@Feat(00123)`, `@Feat(32109)`',
+		config: {
+			[name]: ['error', {
+				feature: '/@Feat\\([0-9]{5}\\)/'
+			}],
+		},
+	}, {
+		title: 'Define a list of required tags with one present',
+		description: 'Enforce all scenarios to have the tag `@ready`, or `@manual` or `@wip`. A combination of them are allowed too.',
+		config: {
+			[name]: ['error', {
+				'scenario': [['@ready', '@manual', '@wip']],
+			}],
+		},
+	}, {
+		title: 'Mix required tag, and sublist of required tags',
+		description: 'Enforce all scenarios to have the tag `@ready`, or `@manual` or `@wip`. A combination of them are allowed too.',
+		config: {
+			[name]: ['error', {
+				'scenario': ['/@ID\\.[0-9]{1,5}/', [['@ready', '@manual', '@wip']]],
+			}],
+		},
+	}],
+};

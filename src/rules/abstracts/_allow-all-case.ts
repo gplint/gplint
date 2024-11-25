@@ -1,14 +1,6 @@
 import _ from 'lodash';
-import {GherkinData, RuleSubConfig, RuleError} from '../../types.js';
-import {
-	Background,
-	Examples,
-	Feature,
-	FeatureChild,
-	Location,
-	Rule,
-	Scenario
-} from '@cucumber/messages';
+import {GherkinData, RuleError, RuleSubConfig} from '../../types.js';
+import {Background, Examples, Feature, FeatureChild, Location, Rule, Scenario} from '@cucumber/messages';
 
 const Levels = {
 	Global: 'Global',
@@ -39,7 +31,15 @@ export const availableConfigs = {
 export function run(
 	{feature}: GherkinData,
 	configuration: RuleSubConfig<typeof availableConfigs>,
-	{rule, caseMethod, errorMsg}: {rule: string, caseMethod: () => string, errorMsg: string}
+	{
+		rule,
+		caseMethod,
+		errorMsg,
+	}: {
+		rule: string,
+		caseMethod: () => string,
+		errorMsg: string
+	},
 ): RuleError[] {
 	if (!feature) {
 		return [];
@@ -59,7 +59,7 @@ export function run(
 				message: `${levelName} ${errorMsg}.`,
 				rule,
 				line: location.line,
-				column: location.column
+				column: location.column,
 			});
 		}
 	}
@@ -114,3 +114,55 @@ export function run(
 function configOrGlobal(config?: boolean, globalCfg?: boolean) {
 	return config ?? globalCfg;
 }
+
+export const configurationDocumentation = [{
+	name: Levels.Global,
+	type: 'boolean',
+	description: 'The rule affects globally, to all nodes (except if the opposite is specified by config).',
+	default: availableConfigs.Global.toString(),
+}, {
+	name: Levels.Description,
+	type: 'boolean',
+	description: 'The rule affects to the `Description` node.',
+	default: '`undefined` (Inherits from Global)',
+}, {
+	name: Levels.Feature,
+	type: 'boolean',
+	description: 'The rule affects to the `Feature` node.',
+	default: '`undefined` (Inherits from Global)',
+}, {
+	name: Levels.Rule,
+	type: 'boolean',
+	description: 'The rule affects to the `Rule` node.',
+	default: '`undefined` (Inherits from Global)',
+}, {
+	name: Levels.Background,
+	type: 'boolean',
+	description: 'The rule affects to the `Background` node.',
+	default: '`undefined` (Inherits from Global)',
+}, {
+	name: Levels.Scenario,
+	type: 'boolean',
+	description: 'The rule affects to the `Scenario` node.',
+	default: '`undefined` (Inherits from Global)',
+}, {
+	name: Levels.Step,
+	type: 'boolean',
+	description: 'The rule affects to the `Step` node.',
+	default: '`undefined` (Inherits from Global)',
+}, {
+	name: Levels.Example,
+	type: 'boolean',
+	description: 'The rule affects to the `Example` node.',
+	default: '`undefined` (Inherits from Global)',
+}, {
+	name: Levels.ExampleHeader,
+	type: 'boolean',
+	description: 'The rule affects to the `ExampleHeader` node.',
+	default: '`undefined` (Inherits from Global)',
+}, {
+	name: Levels.ExampleBody,
+	type: 'boolean',
+	description: 'The rule affects to the `ExampleBody` node.',
+	default: '`undefined` (Inherits from Global)',
+}];

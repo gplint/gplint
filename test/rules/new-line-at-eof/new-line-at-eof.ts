@@ -5,8 +5,8 @@ import * as ruleTestBase from '../rule-test-base.js';
 import * as rule from '../../../src/rules/new-line-at-eof.js';
 import {FileData, RuleSubConfig} from '../../../src/types.js';
 
-const runTestRequireNewLine = ruleTestBase.createRuleTest(rule, 'New line at EOF(end of file) is required');
-const runTestDisallowNewLine = ruleTestBase.createRuleTest(rule, 'New line at EOF(end of file) is not allowed');
+const runTestRequireNewLine = ruleTestBase.createRuleTest(rule, 'New line at EOF (end of file) is required');
+const runTestDisallowNewLine = ruleTestBase.createRuleTest(rule, 'New line at EOF (end of file) is not allowed');
 
 describe('New Line at EOF Rule', function() {
 	beforeEach(function() {

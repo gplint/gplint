@@ -6,8 +6,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [2.1.0] - 2024-09-29
 ### 🚀 New Feature
-* feature: auto fix problems by @lucas-it in https://github.com/Nyaran/gplint/pull/672
-  * chore: Mark fixable rules on README.md by @Nyaran in https://github.com/Nyaran/gplint/pull/673
+* feature: auto fix problems by @lucas-it in https://github.com/gplint/gplint/pull/672
+  * chore: Mark fixable rules on README.md by @Nyaran in https://github.com/gplint/gplint/pull/673
 
 ## [2.0.0] - 2024-07-07
 ### 💥 Breaking Change
@@ -40,15 +40,15 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [1.5.1] - 2023-07-17
 ### Fixed
-* Fix load default config file if argument is not specified. by @Nyaran in https://github.com/Nyaran/gplint/pull/440
+* Fix load default config file if argument is not specified. by @Nyaran in https://github.com/gplint/gplint/pull/440
 
 ## [1.5.0] - 2023-07-15
 ### Added
-* Support custom rules in TypeScript by @Nyaran in https://github.com/Nyaran/gplint/pull/434
+* Support custom rules in TypeScript by @Nyaran in https://github.com/gplint/gplint/pull/434
 
 ### Changed
-* Improve rule no-restricted-patterns allowing to restrict words on steps by @AlexisArteaga13 in https://github.com/Nyaran/gplint/pull/433
-* Improve rule keywords-in-logical-order allowing to detect missing keywords by @AlexisArteaga13 in https://github.com/Nyaran/gplint/pull/438
+* Improve rule no-restricted-patterns allowing to restrict words on steps by @AlexisArteaga13 in https://github.com/gplint/gplint/pull/433
+* Improve rule keywords-in-logical-order allowing to detect missing keywords by @AlexisArteaga13 in https://github.com/gplint/gplint/pull/438
 
 ## [1.4.1] - 2023-03-14
 ### Fixed
@@ -116,7 +116,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [1.0.0] - 2021-09-27
 ### Changed
-* Rename project to [gplint](https://github.com/Nyaran/gplint).
+* Rename project to [gplint](https://github.com/gplint/gplint).
 * Improve console output when using stylish, adding column number and error level.
 * Improve rule `no-dupe-scenario-names` allowing to validate scenario names after replace the example variables.
 * Update Gherkin to the latest version.

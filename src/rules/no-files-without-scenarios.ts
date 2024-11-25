@@ -1,4 +1,4 @@
-import {GherkinData, RuleError} from '../types.js';
+import {Documentation, GherkinData, RuleError} from '../types.js';
 import { featureSpread } from './utils/gherkin.js';
 
 export const name = 'no-files-without-scenarios';
@@ -21,3 +21,15 @@ export function run({feature}: GherkinData): RuleError[] {
 	}
 	return errors;
 }
+
+export const documentation: Documentation = {
+	description: 'Disallows files with no scenarios.',
+	fixable: false,
+	examples: [{
+		title: 'Example',
+		description: 'Enable rule',
+		config: {
+			[name]: 'error',
+		}
+	}],
+};

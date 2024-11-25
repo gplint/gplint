@@ -1,5 +1,5 @@
 import * as gherkinUtils from './utils/gherkin.js';
-import {GherkinData, RuleError} from '../types.js';
+import {Documentation, GherkinData, RuleError} from '../types.js';
 import { featureSpread } from './utils/gherkin.js';
 
 export const name = 'no-examples-in-scenarios';
@@ -28,3 +28,15 @@ export function run({feature}: GherkinData): RuleError[] {
 	});
 	return errors;
 }
+
+export const documentation: Documentation = {
+	description: 'Disallow the use of "Examples" in Scenarios, only allowed in Scenario Outlines.',
+	fixable: false,
+	examples: [{
+		title: 'Example',
+		description: 'Enable rule',
+		config: {
+			[name]: 'error',
+		}
+	}],
+};

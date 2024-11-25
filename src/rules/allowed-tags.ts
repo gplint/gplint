@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { Examples, Feature, Rule, Scenario, Tag } from '@cucumber/messages';
-import {GherkinData, RuleError, RuleSubConfig} from '../types.js';
+import {Documentation, GherkinData, RuleError, RuleSubConfig} from '../types.js';
 import { featureSpread } from './utils/gherkin.js';
 
 export const name = 'allowed-tags';
@@ -67,3 +67,29 @@ function createError(node: Feature | Rule | Scenario | Examples, tag: Tag): Rule
 		column : tag.location.column,
 	};
 }
+
+export const documentation: Documentation = {
+	description: 'Only the listed tags are allowed.',
+	fixable: false,
+	configuration: [{
+		name: 'tags',
+		type: 'string[]',
+		description: 'List of tags that should match by exact text.',
+		default: availableConfigs.tags,
+	}, {
+		name: 'patterns',
+		type: 'string[]',
+		description: 'List of patterns that should match by a Regular Expression.',
+		default: availableConfigs.patterns,
+	}],
+	examples: [{
+		title: 'Example',
+		description: 'Only accept tags `@watch`, `@wip` and all that starts with `@ID.` and is followed by 5 numbers.',
+		config: {
+			[name]: ['error', {
+				'tags': ['@watch', '@wip'],
+				'patterns': ['^@ID.[0-9]{5}$'],
+			}],
+		}
+	}],
+};

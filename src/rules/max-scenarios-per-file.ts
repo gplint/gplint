@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {GherkinData, RuleSubConfig, RuleError} from '../types.js';
+import {GherkinData, RuleSubConfig, RuleError, Documentation} from '../types.js';
 import { featureSpread } from './utils/gherkin.js';
 
 export const name = 'max-scenarios-per-file';
@@ -41,3 +41,27 @@ export function run({feature}: GherkinData, configuration: RuleSubConfig<typeof 
 
 	return errors;
 }
+
+export const documentation: Documentation = {
+	description: 'Allows the user to specify the max number of scenarios per feature file.',
+	fixable: false,
+	configuration: [{
+		name: 'maxScenarios',
+		type: 'number',
+		description: 'The maximum scenarios per file after which the rule fails',
+		default: availableConfigs.maxScenarios.toString(),
+	}, {
+		name: 'countOutlineExamples',
+		type: 'boolean',
+		description: 'whether to count every example row for a Scenario Outline, as opposed to just 1 for the whole block',
+		default: availableConfigs.countOutlineExamples.toString(),
+	}],
+	examples: [{
+		title: 'Example',
+		description: `- \`maxScenarios\` (number) the maximum scenarios per file after which the rule fails - defaults to \`10\`
+- \`countOutlineExamples\` (boolean) whether to count every example row for a Scenario Outline, as opposed to just 1 for the whole block - defaults to \`true\``,
+		config: {
+			[name]: ['error', {'maxScenarios': 10, 'countOutlineExamples': true}]
+		}
+	}],
+};

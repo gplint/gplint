@@ -1,4 +1,4 @@
-import {GherkinData, RuleError} from '../types.js';
+import {Documentation, GherkinData, RuleError} from '../types.js';
 
 export const name = 'no-unnamed-features';
 
@@ -16,3 +16,15 @@ export function run({feature}: GherkinData): RuleError[] {
 	}
 	return errors;
 }
+
+export const documentation: Documentation = {
+	description: 'Disallows empty Feature name.',
+	fixable: false,
+	examples: [{
+		title: 'Example',
+		description: 'Enable rule',
+		config: {
+			[name]: 'error',
+		}
+	}],
+};

@@ -1,6 +1,6 @@
 # gplint (Gherkin/Pickle Linter)
-[![Test](https://github.com/Nyaran/gplint/actions/workflows/test.yml/badge.svg)](https://github.com/Nyaran/gplint/actions/workflows/test.yml)
-[![codecov](https://codecov.io/gh/Nyaran/gplint/branch/main/graph/badge.svg?token=JAAQ2DCW9D)](https://codecov.io/gh/Nyaran/gplint)
+[![Test](https://github.com/gplint/gplint/actions/workflows/test.yml/badge.svg)](https://github.com/gplint/gplint/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/gplint/gplint/branch/main/graph/badge.svg?token=JAAQ2DCW9D)](https://codecov.io/gh/gplint/gplint)
 [![npm](https://img.shields.io/npm/dw/gplint)](https://www.npmjs.com/package/gplint)
 
 Uses [Gherkin](https://github.com/cucumber/gherkin-javascript) to parse feature files and runs linting against the default rules, and the optional rules you specified in your `.gplintrc` file.
@@ -17,13 +17,13 @@ npm install gplint
 To see the output for all the errors that the linter can detect run:
 
 ```shell
-git clone https://github.com/Nyaran/gplint.git
+git clone https://github.com/gplint/gplint.git
+npm install
 npm run demo
 ```
 
 Or check this:
-![console demo](https://raw.githubusercontent.com/Nyaran/gplint/main/demo.png)
-
+![console demo](https://raw.githubusercontent.com/gplint/gplint/main/docs/static/img/demo.png)
 
 ## Available rules
 > Rules with :gear: means that allows auto-fix with `--fix` argument.
@@ -56,7 +56,7 @@ Or check this:
 | `no-multiple-empty-lines`                                               | Disallows multiple empty lines                                                                                                                  |
 | [`no-partially-commented-tag-lines`](#no-partially-commented-tag-lines) | Disallows partially commented tag lines                                                                                                         |
 | [`no-restricted-patterns`](#no-restricted-patterns)                     | A list of patterns to disallow globally, or specifically in features, rules, backgrounds, scenarios, or scenario outlines, Steps                |
-| [`no-restricted-tags`](#no-restricted-tags)                             | Disallow use of particular @tags                                                                                                                |
+| [`no-restricted-tags`](#no-restricted-tags)                             | Disallow use of particular tags                                                                                                                 |
 | `no-scenario-outlines-without-examples`                                 | Disallows scenario outlines without examples                                                                                                    |
 | `no-superfluous-tags`                                                   | Disallows tags present on a Node, its parents (E.g. Same tags in a Scenario and/or Example, and also on the Feature or Rule that contains it    |
 | :gear: `no-trailing-spaces`                                             | Disallows trailing spaces                                                                                                                       |
@@ -159,8 +159,7 @@ If you are using acronyms with the style `camelCase` and you want to preserve th
 - `camelCase` - first letter of each word capitalized, except first e.g. "myFancyFeatureACRON.feature"
 
 ### no-partially-commented-tag-lines
-Disallows partially commented tag lines. You can configure if a comment is allowed if is separated with a space or not
-allowed at all:
+Disallows partially commented tag lines. You can configure if a comment is allowed if is separated with a space or not allowed at all:
 
 #### Allow separated (Default)
 ```json
@@ -256,32 +255,11 @@ Notes:
 
 ### indentation
 
-`indentation` can be configured in a more granular level and uses following rules by default:
-- Expected indentation for Feature, Background, Scenario, Examples heading: 0 spaces
-- Expected indentation for Steps and each example: 2 spaces
 
-You can override the defaults for `indentation` like this:
 
 ```json
 {
-  "indentation" : [
-    "error", {
-      "Feature": 0,
-      "Background": 0,
-      "Scenario": 0,
-      "Step": 2,
-      "Examples": 0,
-      "example": 2,
-      "given": 2,
-      "when": 2,
-      "then": 2,
-      "and": 2,
-      "but": 2,
-      "feature tag": 0,
-      "scenario tag": 0,
-      "examples tag": 0
-    }
-  ]
+  
 }
 ```
 There is no need to override all the defaults, as is done above, instead they can be overridden only where required. `Step` will be used as a fallback if the keyword of the step, e.g. 'given', is not specified.  If `feature tag` is not set then `Feature` is used as a fallback, and if `scenario tag` is not set then `Scenario` is used as a fallback.
@@ -379,8 +357,7 @@ Same as the default behaviour, find duplicates along all files.
 
 #### in-feature
 
-To enable searching for duplicates in each individual feature (same scenario name in different features won't raise an
-error) you need to configure the rule like this:
+To enable searching for duplicates in each individual feature (same scenario name in different features won't raise an error) you need to configure the rule like this:
 
 ```json
 {
@@ -493,7 +470,7 @@ Example configuration with default values:
 
 ### related-tags
 
-`related-tags` allow to define a list of tags with a list of related tags that should be present too. The related tags can be an string or a regular expression (represented as a string between slashes `/`)
+`related-tags` allow to define a list of tags with a list of related tags that should be present too. The related tags can be a string or a regular expression (represented as a string between slashes `/`)
 
 ```json
 {

@@ -1,6 +1,6 @@
 import * as gherkinUtils from './utils/gherkin.js';
 import {Step} from '@cucumber/messages';
-import {GherkinData, RuleError} from '../types.js';
+import {Documentation, GherkinData, RuleError} from '../types.js';
 import { featureSpread } from './utils/gherkin.js';
 
 export const name = 'use-and';
@@ -41,3 +41,15 @@ function createError(step: Step) {
 		column : step.location.column,
 	};
 }
+
+export const documentation: Documentation = {
+	description: 'Disallows repeated step names requiring use of `And` instead.',
+	fixable: false,
+	examples: [{
+		title: 'Example',
+		description: 'Enable rule',
+		config: {
+			[name]: 'error',
+		}
+	}],
+};
