@@ -112,7 +112,6 @@ The default case is testing against all the features (same scenario name in diff
 
 Additionally, you can also look for duplicated on Outline Scenarios with variables on the title, just adding \`-compile\` suffix to the rule configuration (If you use this option, you need to have a variable on the title of all your Outlines)
 `,
-	fixable: false,
 	configuration: [{
 		name: 'anywhere',
 		description: 'Same as the default behaviour, find duplicates along all files.',

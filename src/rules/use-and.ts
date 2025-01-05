@@ -44,7 +44,6 @@ function createError(step: Step) {
 
 export const documentation: Documentation = {
 	description: 'Disallows repeated step names requiring use of `And` instead.',
-	fixable: false,
 	examples: [{
 		title: 'Example',
 		description: 'Enable rule',

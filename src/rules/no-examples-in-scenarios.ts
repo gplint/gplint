@@ -31,7 +31,6 @@ export function run({feature}: GherkinData): RuleError[] {
 
 export const documentation: Documentation = {
 	description: 'Disallow the use of "Examples" in Scenarios, only allowed in Scenario Outlines.',
-	fixable: false,
 	examples: [{
 		title: 'Example',
 		description: 'Enable rule',

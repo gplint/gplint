@@ -44,7 +44,6 @@ export function run({feature}: GherkinData, configuration: RuleSubConfig<typeof 
 
 export const documentation: Documentation = {
 	description: 'Allows the user to specify the max number of scenarios per feature file.',
-	fixable: false,
 	configuration: [{
 		name: 'maxScenarios',
 		type: 'number',

@@ -55,7 +55,6 @@ function checkTags(child: GherkinTaggable, parents: GherkinTaggable[], language:
 
 export const documentation: Documentation = {
 	description: 'Disallows tags present on a Node, its parents (E.g. Same tags in a Scenario and/or Example, and also on the Feature or Rule that contains it.',
-	fixable: false,
 	examples: [{
 		title: 'Example',
 		description: 'Enable rule',

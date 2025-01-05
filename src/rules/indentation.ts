@@ -1,24 +1,27 @@
 import _ from 'lodash';
 import * as gherkinUtils from './utils/gherkin.js';
-import {Documentation, GherkinData, RuleError, RuleSubConfig} from '../types.js';
+import { Documentation, GherkinData, ErrorData, RuleError, RuleSubConfig, FileData } from '../types.js';
 import {FeatureChild, Location, RuleChild, Step, Tag} from '@cucumber/messages';
-import {getLineContent, modifyLine} from './utils/line.js';
 
 export const name = 'indentation';
 const defaultConfig = {
-	'Feature': 0,
-	'Background': 2,
-	'Rule': 2,
-	'Scenario': 2,
-	'Step': 4,
-	'Examples': 4,
-	'example': 6,
-	'given': 4,
-	'when': 4,
-	'then': 4,
-	'and': 4,
-	'but': 4,
-	'RuleFallback': true, // If `true`, the indentation for nodes inside Rule is the sum of "Rule" and the node itself, else it uses the node directly
+	// Levels
+	Feature: 0,
+	Background: 2,
+	Rule: 2,
+	Scenario: 2,
+	Step: 4,
+	Examples: 4,
+	example: 6,
+	given: 4,
+	when: 4,
+	then: 4,
+	and: 4,
+	but: 4,
+	// Config
+	RuleFallback: true, // If `true`, the indentation for nodes inside Rule is the sum of "Rule" and the node itself, else it uses the node directly
+	type: 'both', // 'both' | 'space' | 'tab'
+	preferType: 'space', // 'space' | 'tab'
 };
 
 export const availableConfigs = _.merge({}, defaultConfig, {
@@ -31,6 +34,12 @@ export const availableConfigs = _.merge({}, defaultConfig, {
 
 type Configuration = RuleSubConfig<typeof availableConfigs>;
 type ConfigurationKey = keyof Configuration;
+
+interface IndentationErrorData extends ErrorData {
+	type: string,
+	expectedIndentation: number,
+	parsedLocColumn: number,
+}
 
 function mergeConfiguration(configuration: Configuration): Configuration {
 	const mergedConfiguration = _.merge({}, defaultConfig, configuration);
@@ -51,40 +60,30 @@ function mergeConfiguration(configuration: Configuration): Configuration {
 	return mergedConfiguration;
 }
 
-export function fixLine(existingLine: string, expectedIndentation: number): string {
-	const newIndentation = ' '.repeat(expectedIndentation);
-
-	return `${newIndentation}${existingLine.replaceAll(/^\s+/g, '')}`;
-}
-
-export function run({
-	feature,
-	file,
-}: GherkinData, configuration: Configuration, autoFix: boolean): RuleError[] {
+export function run({ feature, file }: GherkinData, configuration: Configuration): IndentationErrorData[] {
 	if (!feature) {
 		return [];
 	}
 
-	const errors = [] as RuleError[];
+	const errors = [] as IndentationErrorData[];
 	const mergedConfiguration = mergeConfiguration(configuration);
 
-	function validate(parsedLocation: Location, type: ConfigurationKey, modifier = 0) {
-		// location.column is 1 index based so, when we compare with the expected
-		// indentation we need to subtract 1
-		const parsedLocColumn = parsedLocation.column ?? 0;
+	function validate(location: Location, type: ConfigurationKey, modifier = 0) {
+		const parsedLocColumn = location.column ?? 0;
 		const expectedIndentation = mergedConfiguration[type] as number + modifier;
-		if (parsedLocColumn - 1 !== expectedIndentation) {
-			if (autoFix) {
-				const newLine = fixLine(getLineContent(file, parsedLocation.line), expectedIndentation);
-				modifyLine(file, parsedLocation.line, newLine);
-			} else {
-				errors.push({
-					message: `Wrong indentation for "${type}", expected indentation level of ${expectedIndentation}, but got ${parsedLocColumn - 1}`,
-					rule: name,
-					line: parsedLocation.line,
-					column: parsedLocation.column,
-				});
-			}
+
+		const lineContent = file.lines[location.line - 1];
+		const indentChar = mergedConfiguration.type === 'both' && [' ', '\t'].includes(lineContent[0])
+			? lineContent[0]
+			: mergedConfiguration.type === 'tab' ? '\t' : ' ';
+
+		if (lineContent.substring(0, lineContent.length - lineContent.trimStart().length) !== indentChar.repeat(expectedIndentation)) {
+			errors.push({
+				location,
+				type,
+				expectedIndentation,
+				parsedLocColumn,
+			});
 		}
 	}
 
@@ -149,13 +148,34 @@ export function run({
 	return errors;
 }
 
+export function buildRuleErrors(error: IndentationErrorData): RuleError {
+	return {
+		message: `Wrong indentation for "${error.type}", expected indentation level of ${error.expectedIndentation}, but got ${error.parsedLocColumn - 1}`,
+		rule: name,
+		line: error.location.line,
+		column: error.location.column,
+	};
+}
+
+export function fix(file: FileData, configuration: Configuration, error: IndentationErrorData): void {
+	const mergedConfiguration = mergeConfiguration(configuration);
+
+	const lineContent = file.lines[error.location.line - 1];
+	const lineTrimmed = lineContent.trimStart();
+
+	const indentChar = mergedConfiguration.type === 'both' && [' ', '\t'].includes(lineContent[0])
+		? lineContent[0]
+		: (mergedConfiguration.type === 'both' ? mergedConfiguration.preferType : mergedConfiguration.type) === 'tab' ? '\t' : ' ';
+
+	file.lines[error.location.line - 1] = lineTrimmed.padStart(lineTrimmed.length + error.expectedIndentation, indentChar);
+}
+
 export const documentation: Documentation = {
 	description: `Allows the user to specify indentation rules.
 This rule can be configured in a more granular level and uses following rules by default:
 
 * Expected indentation for Feature, Background, Scenario, Examples heading: 0 spaces
 * Expected indentation for Steps and each example: 2 spaces`,
-	fixable: true,
 	configuration: [{
 		name: 'Feature',
 		type: 'number',
@@ -221,6 +241,16 @@ This rule can be configured in a more granular level and uses following rules by
 		type: 'number',
 		description: 'If enabled, the indentation for nodes inside Rule is the sum of "Rule" and the node itself, else it uses the node directly.',
 		default: availableConfigs.RuleFallback.toString(),
+	}, {
+		name: 'type',
+		type: 'string',
+		description: 'Defines the type of indentation to use. If `both`, it will allow spaces and tabs. If `space`, it will use spaces. If `tab`, it will use tabs.',
+		default: availableConfigs.type.toString(),
+	}, {
+		name: 'preferType',
+		type: 'string',
+		description: 'Defines the preferred type of indentation to use. If `space`, it will use spaces. If `tab`, it will use tabs. (Only applies to auto-fixing)',
+		default: availableConfigs.preferType.toString(),
 	}],
 	examples: [{
 		title: 'Example',

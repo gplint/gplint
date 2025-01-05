@@ -1,7 +1,8 @@
 import {assert} from 'chai';
 import _ from 'lodash';
 import * as linter from '../../src/linter.js';
-import {Rule, RuleSubConfig} from '../../src/types.js';
+import { ErrorData, Rule, RuleSubConfig } from '../../src/types.js';
+import os from 'node:os';
 
 interface RuleErrorTemplate {
 	messageElements?: Record<string, string | number | (string | number)[]>
@@ -23,6 +24,24 @@ export function createRuleTest(rule: Rule, messageTemplate: string): RunTestFunc
 		});
 
 		const { feature, pickles, file } = await linter.readAndParseFile(`test/rules/${featureFile}`);
-		assert.sameDeepMembers(rule.run({feature, pickles, file}, configuration, false), expectedErrors);
+
+		const errors = rule.run({ feature, pickles, file }, configuration);
+
+		assert.sameDeepMembers(rule.buildRuleErrors ? errors.map(e => rule.buildRuleErrors(e as ErrorData)) : errors, expectedErrors);
+	};
+}
+
+export function createRuleFixTest(rule: Rule) {
+	return async function runTest(featureFile: string, configuration: RuleSubConfig<unknown>, expected: string): Promise<void> {
+		const { feature, pickles, file } = await linter.readAndParseFile(`test/rules/${featureFile}`);
+
+		const errors = rule.run({ feature, pickles, file }, configuration);
+
+		errors.forEach(error => {
+			if (rule.fix) {
+				rule.fix(file, configuration, error as ErrorData);
+			}
+		});
+		assert.equal(file.lines.join(os.EOL), expected);
 	};
 }

@@ -66,7 +66,6 @@ export function run({file, feature}: GherkinData, configuration: RuleSubConfig<t
 
 export const documentation: Documentation = {
 	description: 'Disallows partially commented tag lines. You can configure if a comment is allowed if is separated with a space or not allowed at all.',
-	fixable: false,
 	configuration: [{
 		name: 'allowSeparated',
 		type: 'boolean',

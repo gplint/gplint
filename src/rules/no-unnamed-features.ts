@@ -19,7 +19,6 @@ export function run({feature}: GherkinData): RuleError[] {
 
 export const documentation: Documentation = {
 	description: 'Disallows empty Feature name.',
-	fixable: false,
 	examples: [{
 		title: 'Example',
 		description: 'Enable rule',

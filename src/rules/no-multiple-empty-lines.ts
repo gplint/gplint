@@ -18,7 +18,6 @@ export function run({file}: GherkinData): RuleError[] {
 
 export const documentation: Documentation = {
 	description: 'Disallows multiple empty lines.',
-	fixable: false,
 	examples: [{
 		title: 'Example',
 		description: 'Enable rule',

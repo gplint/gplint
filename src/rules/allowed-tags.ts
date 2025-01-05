@@ -70,7 +70,6 @@ function createError(node: Feature | Rule | Scenario | Examples, tag: Tag): Rule
 
 export const documentation: Documentation = {
 	description: 'Only the listed tags are allowed.',
-	fixable: false,
 	configuration: [{
 		name: 'tags',
 		type: 'string[]',

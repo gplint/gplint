@@ -38,7 +38,6 @@ function createError(background: Background) {
 
 export const documentation: Documentation = {
 	description: 'Disallows background when there is just one scenario.',
-	fixable: false,
 	examples: [{
 		title: 'Example',
 		description: 'Enable rule',

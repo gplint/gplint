@@ -18,7 +18,6 @@ export function run({feature}: GherkinData): RuleError[] {
 
 export const documentation: Documentation = {
 	description: 'Disallows empty feature files.',
-	fixable: false,
 	examples: [{
 		title: 'Example',
 		description: 'Enable rule',

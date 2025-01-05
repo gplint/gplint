@@ -37,7 +37,6 @@ export function run({file}: GherkinData, configuration: RuleSubConfig<string>): 
 
 export const documentation: Documentation = {
 	description: 'Disallows/enforces new line at EOF.',
-	fixable: false,
 	configuration: [{
 		name: 'yes',
 		description: 'Force new line at EOF.',
