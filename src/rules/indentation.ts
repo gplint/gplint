@@ -38,7 +38,6 @@ type ConfigurationKey = keyof Configuration;
 interface IndentationErrorData extends ErrorData {
 	type: string,
 	expectedIndentation: number,
-	parsedLocColumn: number,
 }
 
 function mergeConfiguration(configuration: Configuration): Configuration {
@@ -69,7 +68,6 @@ export function run({ feature, file }: GherkinData, configuration: Configuration
 	const mergedConfiguration = mergeConfiguration(configuration);
 
 	function validate(location: Location, type: ConfigurationKey, modifier = 0) {
-		const parsedLocColumn = location.column ?? 0;
 		const expectedIndentation = mergedConfiguration[type] as number + modifier;
 
 		const lineContent = file.lines[location.line - 1];
@@ -82,7 +80,6 @@ export function run({ feature, file }: GherkinData, configuration: Configuration
 				location,
 				type,
 				expectedIndentation,
-				parsedLocColumn,
 			});
 		}
 	}
@@ -150,7 +147,7 @@ export function run({ feature, file }: GherkinData, configuration: Configuration
 
 export function buildRuleErrors(error: IndentationErrorData): RuleError {
 	return {
-		message: `Wrong indentation for "${error.type}", expected indentation level of ${error.expectedIndentation}, but got ${error.parsedLocColumn - 1}`,
+		message: `Wrong indentation for "${error.type}", expected indentation level of ${error.expectedIndentation}, but got ${error.location.column - 1}`,
 		rule: name,
 		line: error.location.line,
 		column: error.location.column,
