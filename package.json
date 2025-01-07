@@ -67,10 +67,10 @@
     "@eslint/js": "9.17.0",
     "@types/chai": "5.0.1",
     "@types/eslint__js": "8.42.3",
-    "@types/lodash": "4.17.13",
+    "@types/lodash": "4.17.14",
     "@types/mocha": "10.0.10",
     "@types/mock-fs": "4.13.4",
-    "@types/node": "22.10.4",
+    "@types/node": "22.10.5",
     "@types/sinon": "17.0.3",
     "@types/text-table": "0.2.5",
     "@types/yargs": "17.0.33",
@@ -86,7 +86,7 @@
     "rimraf": "6.0.1",
     "sinon": "19.0.2",
     "typescript": "5.7.2",
-    "typescript-eslint": "8.19.0"
+    "typescript-eslint": "8.19.1"
   },
   "engines": {
     "node": ">=18.0.0"
