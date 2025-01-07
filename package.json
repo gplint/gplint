@@ -67,7 +67,7 @@
     "@eslint/js": "9.17.0",
     "@types/chai": "5.0.1",
     "@types/eslint__js": "8.42.3",
-    "@types/lodash": "4.17.13",
+    "@types/lodash": "4.17.14",
     "@types/mocha": "10.0.10",
     "@types/mock-fs": "4.13.4",
     "@types/node": "22.10.4",
