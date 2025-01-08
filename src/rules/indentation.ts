@@ -154,7 +154,7 @@ export function buildRuleErrors(error: IndentationErrorData): RuleError {
 	};
 }
 
-export function fix(file: FileData, configuration: Configuration, error: IndentationErrorData): void {
+export function fix(error: IndentationErrorData, file: FileData, configuration: Configuration): void {
 	const mergedConfiguration = mergeConfiguration(configuration);
 
 	const lineContent = file.lines[error.location.line - 1];

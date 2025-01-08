@@ -39,7 +39,7 @@ export function createRuleFixTest(rule: Rule) {
 
 		errors.forEach(error => {
 			if (rule.fix) {
-				rule.fix(file, configuration, error as ErrorData);
+				rule.fix(error as ErrorData, file, configuration);
 			}
 		});
 		assert.equal(file.lines.join(os.EOL), expected);

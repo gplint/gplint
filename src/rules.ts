@@ -107,9 +107,9 @@ export async function runAllEnabledRules(
 			if (error.length > 0) {
 				if (autoFix && rule.fix) {
 					error.forEach(e => {
-						rule.fix(file, ruleConfig, e as ErrorData);
+						rule.fix(e as ErrorData, file, ruleConfig);
 					});
-					fs.writeFileSync(file.relativePath, file.lines.join(os.EOL)); // TODO test asserting file was written
+					fs.writeFileSync(file.relativePath, file.lines.join(os.EOL));
 					// TODO regenerate pickles
 
 				} else {

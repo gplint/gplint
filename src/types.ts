@@ -43,7 +43,7 @@ export interface Rule {
 	run: (gherkinData: GherkinData, config: RuleSubConfig<unknown>) => (ErrorData|RuleError)[], // TODO allow RuleError temporarily
 	documentation?: Documentation,
 	buildRuleErrors?: (error: ErrorData) => RuleError,
-	fix?: (file: FileData, config: RuleSubConfig<unknown>, error: ErrorData) => void
+	fix?: (error: ErrorData, file: FileData, config: RuleSubConfig<unknown>) => void
 }
 
 export type RulesConfig = Record<string, RuleConfig>;

@@ -1,4 +1,4 @@
-import { Documentation, ErrorData, FileData, GherkinData, RuleError, RuleSubConfig } from '../types.js';
+import { Documentation, ErrorData, FileData, GherkinData, RuleError } from '../types.js';
 
 export const name = 'no-trailing-spaces';
 
@@ -29,7 +29,7 @@ export function buildRuleErrors(error: NoTrailingSpacesErrorData): RuleError {
 	};
 }
 
-export function fix(file: FileData, config: RuleSubConfig<unknown>, error: NoTrailingSpacesErrorData): void {
+export function fix(error: NoTrailingSpacesErrorData, file: FileData): void {
 	file.lines[error.location.line - 1] = file.lines[error.location.line - 1].trimEnd();
 }
 
