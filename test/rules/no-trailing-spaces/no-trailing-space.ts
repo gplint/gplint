@@ -1,7 +1,9 @@
 import * as ruleTestBase from '../rule-test-base.js';
 import * as rule from '../../../src/rules/no-trailing-spaces.js';
-import { expect } from 'chai';
+import {stringEOLNormalize} from '../../_test_utils.js';
+
 const runTest = ruleTestBase.createRuleTest(rule, 'Trailing spaces are not allowed');
+const runFixTest = ruleTestBase.createRuleFixTest(rule);
 
 describe('No Trailing Spaces Rule', function() {
 	it('doesn\'t raise errors when there are no violations', function() {
@@ -13,17 +15,17 @@ describe('No Trailing Spaces Rule', function() {
 			{
 				messageElements: {},
 				line: 1,
-				column: 0
+				column: 34
 			},
 			{
 				messageElements: {},
 				line: 3,
-				column: 0
+				column: 50
 			},
 			{
 				messageElements: {},
 				line: 4,
-				column: 0
+				column: 47
 			}
 		]);
 	});
@@ -33,28 +35,30 @@ describe('No Trailing Spaces Rule', function() {
 			{
 				messageElements: {},
 				line: 4,
-				column: 0
+				column: 49
 			}
 		]);
 	});
 });
 
 describe('No Trailing Spaces Rule - fix line', function() {
-	it('shouldn\'t remove trailing spaces when none exist', function() {
-		const result = rule.fixLine('Given I have a Feature file with great indentation');
-
-		expect(result).to.be.equal('Given I have a Feature file with great indentation');
-	});
-
 	it('should remove trailing spaces', function() {
-		const result = rule.fixLine('Given I have a Feature file with great indentation  ');
+		return runFixTest('no-trailing-spaces/TrailingSpaces.feature', {}, stringEOLNormalize(
+			// language=gherkin
+			`Feature: Test for trailing spaces
 
-		expect(result).to.be.equal('Given I have a Feature file with great indentation');
+Scenario: This is Scenario for no-trailing-spaces
+  Then I should see a no-trailing-spaces error
+`));
 	});
 
-	it('should remove trailing spaces and keep existing indentation', function() {
-		const result = rule.fixLine('  Given I have a Feature file with great indentation  ');
+	it('should remove trailing tabs', function() {
+		return runFixTest('no-trailing-spaces/TrailingTabs.feature', {}, stringEOLNormalize(
+			// language=gherkin
+			`Feature: Test for trailing tabs
 
-		expect(result).to.be.equal('  Given I have a Feature file with great indentation');
+Scenario: This is Scenario for no-trailing-spaces - using tabs
+  Then I should see a no-trailing-spaces error
+`));
 	});
 });

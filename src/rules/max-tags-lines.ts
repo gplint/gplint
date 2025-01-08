@@ -71,7 +71,6 @@ export function run({feature}: GherkinData, configuration: RuleSubConfig<typeof 
 
 export const documentation: Documentation = {
 	description: 'Allows the user to specify the max number of lines for tags in each level. Each level type can be configured separately.',
-	fixable: false,
 	configuration: [{
 		name: 'feature',
 		type: 'number',

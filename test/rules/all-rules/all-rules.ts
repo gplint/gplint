@@ -49,7 +49,7 @@ async function testRule(featureFile: string, rule: string) {
 	} else {
 		configuration[rule] = 'error';
 	}
-	const { feature, pickles, file } = await linter.readAndParseFile(`test/rules/all-rules/${featureFile}`);
+	const gherkinData = await linter.readAndParseFile(`test/rules/all-rules/${featureFile}`);
 
-	return rules.runAllEnabledRules(feature, pickles, file, configuration);
+	return rules.runAllEnabledRules(gherkinData, configuration);
 }

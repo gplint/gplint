@@ -85,7 +85,6 @@ function createError(keyword: string, ...[step, scenario]: ExclusiveParams) {
 
 export const documentation: Documentation = {
 	description: 'Allows the user to maintain the wording order by using the scenario keywords, following the `Given`, `When`, `Then` sequence.',
-	fixable: false,
 	configuration: [{
 		name: 'detectMissingKeywords',
 		type: 'boolean',

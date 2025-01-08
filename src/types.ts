@@ -15,7 +15,6 @@ export type Rules = Record<string, Rule>;
 
 export interface Documentation {
 	description: string
-	fixable: boolean
 	configuration?: DocumentationConfiguration[]
 	examples: DocumentationExample[]
 }
@@ -34,11 +33,17 @@ export interface DocumentationExample {
 	config: unknown
 }
 
+export interface ErrorData {
+	location: Location
+}
+
 export interface Rule {
 	name: string
 	availableConfigs?: Record<string, unknown> | string[]
-	run: (gherkinData: GherkinData, config: RuleSubConfig<unknown>, autoFix: boolean) => RuleError[],
+	run: (gherkinData: GherkinData, config: RuleSubConfig<unknown>) => (ErrorData|RuleError)[], // TODO allow RuleError temporarily
 	documentation?: Documentation,
+	buildRuleErrors?: (error: ErrorData) => RuleError,
+	fix?: (error: ErrorData, file: FileData, config: RuleSubConfig<unknown>) => void
 }
 
 export type RulesConfig = Record<string, RuleConfig>;
@@ -80,6 +85,7 @@ export interface GherkinData {
 export interface FileData {
 	relativePath: string
 	lines: string[]
+	EOL: string
 }
 
 export type GherkinTaggable = Feature | CucumberRule | Scenario | Examples;

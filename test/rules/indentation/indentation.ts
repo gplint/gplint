@@ -1,9 +1,9 @@
 import * as ruleTestBase from '../rule-test-base.js';
 import * as rule from '../../../src/rules/indentation.js';
-import { expect } from 'chai';
+import {stringEOLNormalize} from '../../_test_utils.js';
 
-const runTest = ruleTestBase.createRuleTest(rule,
-	'Wrong indentation for "<%= element %>", expected indentation level of <%= expected %>, but got <%= actual %>');
+const runTest = ruleTestBase.createRuleTest(rule, 'Wrong indentation for "<%= element %>", expected indentation level of <%= expected %>, but got <%= actual %>');
+const runFixTest = ruleTestBase.createRuleFixTest(rule);
 
 const WRONG_INDENTATION_ERRORS = [
 	{
@@ -341,24 +341,142 @@ describe('Indentation rule', function() {
 			'but': 9,
 		}, []);
 	});
-});
 
-describe('Indentation rule - fix line', function() {
-	it('shouldn\'t add spaces when indentation is correct', function() {
-		const result = rule.fixLine('  Given I have a Feature file with great indentation', 2);
+	describe('autofix', function() {
+		it('should fix wrong spaces indentation', function() {
+			return runFixTest('indentation/WrongIndentationSpaces.feature', {}, stringEOLNormalize(
+				// language=gherkin
+				`@featureTag1 @featureTag2
+Feature: Test for indentation - spaces
 
-		expect(result).to.be.equal('  Given I have a Feature file with great indentation');
-	});
+  Background:
+    Given I have a Feature file with indentation all over the place
 
-	it('should add missing indentation spaces', function() {
-		const result = rule.fixLine('Given I have a Feature file with great indentation', 2);
+  @scenarioTag1 @scenarioTag2
+  @scenarioTag3
+  Scenario: This is a Scenario for indentation - spaces
+    Then I should see an indentation error
 
-		expect(result).to.be.equal('  Given I have a Feature file with great indentation');
-	});
+  @scenarioTag1 @scenarioTag2
+  @scenarioTag3
+  Scenario Outline: This is a Scenario Outline for indentation - spaces
+    Then I should see an indentation error <foo>
+    @exampleTag1 @exampleTag2
+    @exampleTag3
+    Examples:
+      | foo |
+      | bar |
 
-	it('should remove extra indentation spaces', function() {
-		const result = rule.fixLine('   Given I have a Feature file with great indentation', 2);
+  @ruletag
+  Rule: This is a rule
+    @scenarioTag4
+    Scenario: This is a Scenario a rule for indentation - spaces
+      Then I should see an indentation error
+`));
+		});
 
-		expect(result).to.be.equal('  Given I have a Feature file with great indentation');
+		it('should fix wrong tabs indentation', function() {
+			return runFixTest('indentation/WrongIndentationTabs.feature',
+				{
+					Feature: 0,
+					Background: 1,
+					Rule: 1,
+					Scenario: 1,
+					Step: 2,
+					Examples: 2,
+					example: 3,
+					given: 2,
+					when: 2,
+					then: 2,
+					and: 2,
+					but: 2,
+					preferType: 'tab'
+				},
+				stringEOLNormalize(
+				// language=gherkin
+					`@featureTag1 @featureTag2
+Feature: Test for indentation - tabs
+
+	Background:
+		Given I have a Feature file with indentation all over the place
+
+	@scenarioTag1 @scenarioTag2
+	@scenarioTag3
+	Scenario: This is a Scenario for indentation - tabs
+		Then I should see an indentation error
+
+	@scenarioTag1 @scenarioTag2
+	@scenarioTag3
+	Scenario Outline: This is a Scenario Outline for indentation - tabs
+		Then I should see an indentation error <foo>
+		@exampleTag1 @exampleTag2
+		@exampleTag3
+		Examples:
+			| foo |
+			| bar |
+
+	@ruletag
+	Rule: This is a rule
+		@scenarioTag4
+		Scenario: This is a Scenario a rule for indentation - spaces
+			Then I should see an indentation error
+`));
+		});
+
+		it('should fix to force using space as indentation character', function() {
+			return runFixTest('indentation/WrongIndentationSpacesTabs.feature',
+				{
+					type: 'space',
+				},
+				stringEOLNormalize(
+				// language=gherkin
+					`@featureTagWithTab
+Feature: Test for indentation - mixed
+
+  @scenarioTagWithSpace
+  @scenarioTagWithTab
+  Scenario: This is a Scenario for indentation - no indentation
+    Given this step is indented with tabs
+    And this step is indented with spaces
+
+  Scenario: This is a Scenario for indentation - tabs
+    Given this step is indented with tabs
+    And this step is not indented
+`));
+		});
+
+		it('should fix to force using tab as indentation character', function() {
+			return runFixTest('indentation/WrongIndentationSpacesTabs.feature',
+				{
+					Feature: 0,
+					Background: 1,
+					Rule: 1,
+					Scenario: 1,
+					Step: 2,
+					Examples: 2,
+					example: 3,
+					given: 2,
+					when: 2,
+					then: 2,
+					and: 2,
+					but: 2,
+					type: 'tab'
+				},
+				stringEOLNormalize(
+				// language=gherkin
+					`@featureTagWithTab
+Feature: Test for indentation - mixed
+
+	@scenarioTagWithSpace
+	@scenarioTagWithTab
+	Scenario: This is a Scenario for indentation - no indentation
+		Given this step is indented with tabs
+		And this step is indented with spaces
+
+	Scenario: This is a Scenario for indentation - tabs
+		Given this step is indented with tabs
+		And this step is not indented
+`));
+		});
 	});
 });

@@ -62,7 +62,6 @@ export function run({feature}: GherkinData, configuration: Configuration): RuleE
 
 export const documentation: Documentation = {
 	description: 'Allows restricting length of Feature/Scenario/Step names. The default is 70 characters for each of these',
-	fixable: false,
 	configuration: [{
 		name: 'feature',
 		type: 'number',

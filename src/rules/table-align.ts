@@ -83,7 +83,6 @@ function createError(cell: TableCell): RuleError {
 
 export const documentation: Documentation = {
 	description: 'Allows to force table alignment on steps and/or examples. Is possible to specify if you want to apply this rule for tables on steps and/or examples',
-	fixable: false,
 	configuration: [{
 		name: 'examples',
 		type: 'boolean',

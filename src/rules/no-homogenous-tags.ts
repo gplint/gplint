@@ -74,7 +74,6 @@ function checkHomogenousContainer(container: Feature | Rule, errors: RuleError[]
 
 export const documentation: Documentation = {
 	description: 'Disallows tags present on every Scenario/Rule in a Feature or Rule, rather than on the Feature/Rule itself. Skips if contains a single scenario.',
-	fixable: false,
 	examples: [{
 		title: 'Example',
 		description: 'Enable rule',

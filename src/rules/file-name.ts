@@ -53,7 +53,6 @@ The list of supported styles is:
 * \`camelCase\`: first letter of each word capitalized, except first e.g. "myFancyFeature.feature"
 * \`kebab-case\`: all lowercase, hyphen-delimited e.g. "my-fancy-feature.feature"
 * \`snake_case\`: all lowercase, underscore-delimited e.g. "my_fancy_feature.feature"`,
-	fixable: false,
 	configuration: [{
 		name: 'style',
 		type: 'string',

@@ -45,7 +45,6 @@ export function run({feature}: GherkinData, configuration: RuleSubConfig<typeof 
 
 export const documentation: Documentation = {
 	description: 'Lets you specify a maximum step length for scenarios and backgrounds. The `Scenario` configuration applies to both scenarios and scenario outlines.',
-	fixable: false,
 	configuration: [{
 		name: 'steps-length',
 		type: 'object',

@@ -68,7 +68,6 @@ function isForbidden(tag: Tag, forbiddenTags: string[], forbiddenPatterns: RegEx
 
 export const documentation: Documentation = {
 	description: 'Disallow use of particular tags. It\'s possible to set exact text match or patterns using a regular expression. See the examples to know how it works.',
-	fixable: false,
 	configuration: [{
 		name: 'tags',
 		type: 'string[]',

@@ -19,7 +19,6 @@ export function run(gherkinData: GherkinData, configuration: RuleSubConfig<typeo
 
 export const documentation: Documentation = {
 	description: 'Allows the user to specify if some nodes allows texts completely in lowercase.',
-	fixable: false,
 	configuration: allowAllCase.configurationDocumentation,
 	examples: [{
 		title: 'Example',

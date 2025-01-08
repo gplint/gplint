@@ -227,7 +227,6 @@ function check(node: GherkinKeyworded | TableCell | DocString, type: string, pro
 
 export const documentation: Documentation = {
 	description: 'A list of patterns to disallow globally, or specifically in features, rules, backgrounds, scenarios, or scenario outlines, Steps. All patterns are treated as case-insensitive',
-	fixable: false,
 	configuration: [{
 		name: 'Global',
 		type: '(string|RegExp)[]',

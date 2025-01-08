@@ -30,7 +30,6 @@ export function run({feature}: GherkinData): RuleError[] {
 
 export const documentation: Documentation = {
 	description: 'Disallows scenario outlines without examples.',
-	fixable: false,
 	examples: [{
 		title: 'Example',
 		description: 'Enable rule',

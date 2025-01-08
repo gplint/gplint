@@ -26,7 +26,6 @@ export function run({feature, file}: GherkinData): RuleError[] {
 
 export const documentation: Documentation = {
 	description: 'Disallows duplicate Feature names.',
-	fixable: false,
 	examples: [{
 		title: 'Example',
 		description: 'Enable rule',

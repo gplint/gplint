@@ -119,7 +119,6 @@ export const documentation: Documentation = {
 	description: `Require tags/patterns of tags. The properties for levels (global, feature, rule, scenario and example),
 are arrays, that allows strings, regular expressions and subarrays.
 If a subarray is used, only one of the tags inside the subarray is needed to accomplish the rule.`,
-	fixable: false,
 	configuration: [{
 		name: 'ignoreUntagged',
 		type: 'boolean',

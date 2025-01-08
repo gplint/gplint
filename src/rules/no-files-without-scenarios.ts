@@ -24,7 +24,6 @@ export function run({feature}: GherkinData): RuleError[] {
 
 export const documentation: Documentation = {
 	description: 'Disallows files with no scenarios.',
-	fixable: false,
 	examples: [{
 		title: 'Example',
 		description: 'Enable rule',

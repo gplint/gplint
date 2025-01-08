@@ -1,26 +1,17 @@
-import {Documentation, GherkinData, RuleError} from '../types.js';
-import { getLineContent, modifyLine } from './utils/line.js';
+import { Documentation, ErrorData, FileData, GherkinData, RuleError } from '../types.js';
 
 export const name = 'no-trailing-spaces';
 
-export function fixLine(existingLine: string): string {
-	return existingLine.replaceAll(/\s+$/g, '');
-}
+type NoTrailingSpacesErrorData = ErrorData
 
-export function run({file}: GherkinData, _: unknown, autoFix: boolean): RuleError[] {
-	const errors = [] as RuleError[];
+export function run({file}: GherkinData): NoTrailingSpacesErrorData[] {
+	const errors = [] as NoTrailingSpacesErrorData[];
 	let lineNo = 1;
 	file.lines.forEach(line => {
 		if (/[\t ]+$/.test(line)) {
-			if (autoFix) {
-				modifyLine(file, lineNo, fixLine(getLineContent(file, lineNo)));
-			} else {
-				errors.push({message: 'Trailing spaces are not allowed',
-					rule   : name,
-					line   : lineNo,
-					column : 0,
-				});
-			}
+			errors.push({
+				location: {line: lineNo, column: line.length},
+			});
 		}
 
 		lineNo++;
@@ -29,9 +20,21 @@ export function run({file}: GherkinData, _: unknown, autoFix: boolean): RuleErro
 	return errors;
 }
 
+export function buildRuleErrors(error: NoTrailingSpacesErrorData): RuleError {
+	return {
+		message: 'Trailing spaces are not allowed',
+		rule   : name,
+		line   : error.location.line,
+		column : error.location.column,
+	};
+}
+
+export function fix(error: NoTrailingSpacesErrorData, file: FileData): void {
+	file.lines[error.location.line - 1] = file.lines[error.location.line - 1].trimEnd();
+}
+
 export const documentation: Documentation = {
 	description: 'Disallows trailing spaces.',
-	fixable: true,
 	examples: [{
 		title: 'Example',
 		description: 'Enable rule',

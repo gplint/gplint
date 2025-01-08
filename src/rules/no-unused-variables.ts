@@ -121,7 +121,6 @@ export function run({feature}: GherkinData): RuleError[] {
 
 export const documentation: Documentation = {
 	description: 'Disallows unused variables in scenario outlines.',
-	fixable: false,
 	examples: [{
 		title: 'Example',
 		description: 'Enable rule',

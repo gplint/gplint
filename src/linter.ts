@@ -23,6 +23,7 @@ export async function readAndParseFile(filePath: string): Promise<GherkinData> {
 	const pickles = [] as Pickle[];
 	const parsingErrors = [] as ParseError[];
 	let fileContent = [] as string[];
+	let fileEOL = '\n';
 
 	return new Promise((resolve, reject) => {
 		const options = {
@@ -44,7 +45,8 @@ export async function readAndParseFile(filePath: string): Promise<GherkinData> {
 					pickles.push(envelope.pickle);
 				}
 				if (envelope.source) {
-					fileContent = envelope.source.data.split(/\r\n|\r|\n/);
+					fileEOL = envelope.source.data.includes('\r\n') ? '\r\n' : '\n';
+					fileContent = envelope.source.data.split(fileEOL);
 				}
 			}
 		});
@@ -64,6 +66,7 @@ export async function readAndParseFile(filePath: string): Promise<GherkinData> {
 				const file = {
 					relativePath: filePath,
 					lines: fileContent,
+					EOL: fileEOL,
 				};
 				resolve({feature, pickles, file});
 			}
@@ -83,8 +86,8 @@ export async function lint(files: string[], configuration?: RulesConfig, additio
 		let perFileErrors: RuleErrors;
 
 		try {
-			const {feature, pickles, file} = await readAndParseFile(f);
-			perFileErrors = await rules.runAllEnabledRules(feature, pickles, file, configuration, additionalRulesDirs, autoFix);
+			const gherkinData = await readAndParseFile(f);
+			perFileErrors = await rules.runAllEnabledRules(gherkinData, configuration, additionalRulesDirs, autoFix);
 		} catch (parsingErrors) {
 			if (parsingErrors instanceof RuleErrors) {
 				perFileErrors = parsingErrors;
