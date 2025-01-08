@@ -1,5 +1,6 @@
 import * as ruleTestBase from '../rule-test-base.js';
 import * as rule from '../../../src/rules/no-trailing-spaces.js';
+import {stringEOLNormalize} from '../../_test_utils.js';
 
 const runTest = ruleTestBase.createRuleTest(rule, 'Trailing spaces are not allowed');
 const runFixTest = ruleTestBase.createRuleFixTest(rule);
@@ -42,22 +43,22 @@ describe('No Trailing Spaces Rule', function() {
 
 describe('No Trailing Spaces Rule - fix line', function() {
 	it('should remove trailing spaces', function() {
-		return runFixTest('no-trailing-spaces/TrailingSpaces.feature', {},
+		return runFixTest('no-trailing-spaces/TrailingSpaces.feature', {}, stringEOLNormalize(
 			// language=gherkin
 			`Feature: Test for trailing spaces
 
 Scenario: This is Scenario for no-trailing-spaces
   Then I should see a no-trailing-spaces error
-`);
+`));
 	});
 
 	it('should remove trailing tabs', function() {
-		return runFixTest('no-trailing-spaces/TrailingTabs.feature', {},
+		return runFixTest('no-trailing-spaces/TrailingTabs.feature', {}, stringEOLNormalize(
 			// language=gherkin
 			`Feature: Test for trailing tabs
 
 Scenario: This is Scenario for no-trailing-spaces - using tabs
   Then I should see a no-trailing-spaces error
-`);
+`));
 	});
 });

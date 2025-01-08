@@ -5,6 +5,7 @@ import { expect } from 'chai';
 import * as sinon from 'sinon';
 
 import * as linter from '../../src/linter.js';
+import {stringEOLNormalize} from '../_test_utils.js';
 
 describe('Autofix', function() {
 	beforeEach(function() {
@@ -40,11 +41,13 @@ describe('Autofix', function() {
 
 		const writeFixedFileCall = fsWriteFileSyncStub.withArgs(featureFile, sinon.match.string);
 
-		expect(writeFixedFileCall.args[0][1]).to.equal(`Feature: auto-fixable feature
+		expect(writeFixedFileCall.args[0][1]).to.equal(stringEOLNormalize(
+			// language=gherkin
+			`Feature: auto-fixable feature
 
   Scenario: Autofixable VIOLATIONS
     Given I have a file with autofixable violations
-`);
+`));
 	});
 
 	it('throw error when fix is enabled - with custom rule', async function() {
