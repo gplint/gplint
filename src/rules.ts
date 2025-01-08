@@ -18,7 +18,6 @@ import {
 	RuleSubConfig,
 } from './types.js';
 import { RuleErrors } from './errors.js';
-import os from 'node:os';
 import fs from 'node:fs';
 
 const LEVELS = [
@@ -109,7 +108,7 @@ export async function runAllEnabledRules(
 					error.forEach(e => {
 						rule.fix(e as ErrorData, file, ruleConfig);
 					});
-					fs.writeFileSync(file.relativePath, file.lines.join(os.EOL));
+					fs.writeFileSync(file.relativePath, file.lines.join(file.EOL));
 					// TODO regenerate pickles
 
 				} else {

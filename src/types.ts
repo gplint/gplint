@@ -85,6 +85,7 @@ export interface GherkinData {
 export interface FileData {
 	relativePath: string
 	lines: string[]
+	EOL: string
 }
 
 export type GherkinTaggable = Feature | CucumberRule | Scenario | Examples;

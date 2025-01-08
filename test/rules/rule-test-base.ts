@@ -2,7 +2,6 @@ import {assert} from 'chai';
 import _ from 'lodash';
 import * as linter from '../../src/linter.js';
 import { ErrorData, Rule, RuleSubConfig } from '../../src/types.js';
-import os from 'node:os';
 
 interface RuleErrorTemplate {
 	messageElements?: Record<string, string | number | (string | number)[]>
@@ -42,6 +41,6 @@ export function createRuleFixTest(rule: Rule) {
 				rule.fix(error as ErrorData, file, configuration);
 			}
 		});
-		assert.equal(file.lines.join(os.EOL), expected);
+		assert.equal(file.lines.join(file.EOL), expected);
 	};
 }
