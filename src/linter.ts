@@ -86,8 +86,8 @@ export async function lint(files: string[], configuration?: RulesConfig, additio
 		let perFileErrors: RuleErrors;
 
 		try {
-			const {feature, pickles, file} = await readAndParseFile(f);
-			perFileErrors = await rules.runAllEnabledRules(feature, pickles, file, configuration, additionalRulesDirs, autoFix);
+			const gherkinData = await readAndParseFile(f);
+			perFileErrors = await rules.runAllEnabledRules(gherkinData, configuration, additionalRulesDirs, autoFix);
 		} catch (parsingErrors) {
 			if (parsingErrors instanceof RuleErrors) {
 				perFileErrors = parsingErrors;

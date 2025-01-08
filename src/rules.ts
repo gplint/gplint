@@ -1,14 +1,14 @@
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 
-import {Feature, Pickle} from '@cucumber/messages';
 import * as glob from 'glob';
 import _ from 'lodash';
 
 import {
 	ErrorData,
 	ErrorLevels,
-	FileData,
+	GherkinData,
 	Rule,
 	RuleConfig,
 	RuleConfigArray,
@@ -18,7 +18,7 @@ import {
 	RuleSubConfig,
 } from './types.js';
 import { RuleErrors } from './errors.js';
-import fs from 'node:fs';
+import { readAndParseFile } from './linter.js';
 
 const LEVELS = [
 	'off',
@@ -84,16 +84,14 @@ export function getRuleLevel(ruleConfig: RuleConfig, rule: string): ErrorLevels 
 }
 
 export async function runAllEnabledRules(
-	feature?: Feature,
-	pickles?: Pickle[],
-	file?: FileData,
+	gherkinData: GherkinData,
 	configuration: RulesConfig = {},
 	additionalRulesDirs?: string[],
 	autoFix = false,
 ): Promise<RuleErrors> {
 	let errors = [] as RuleErrorLevel[];
 	const rules = await getAllRules(additionalRulesDirs);
-	Object.keys(rules).forEach(ruleName => {
+	for (const ruleName of Object.keys(rules)) {
 		const rule = rules[ruleName];
 		const ruleLevel = getRuleLevel(configuration[rule.name], rule.name);
 
@@ -101,16 +99,20 @@ export async function runAllEnabledRules(
 			const ruleConfig = (Array.isArray(configuration[rule.name])
 				? (configuration[rule.name] as RuleConfigArray)[1]
 				: {} as RuleSubConfig<unknown>) as RuleConfig;
-			const error = rule.run({feature, pickles, file}, ruleConfig);
+			const error = rule.run(gherkinData, ruleConfig);
 
 			if (error.length > 0) {
 				if (autoFix && rule.fix) {
 					error.forEach(e => {
-						rule.fix(e as ErrorData, file, ruleConfig);
+						rule.fix(e as ErrorData, gherkinData.file, ruleConfig);
 					});
-					fs.writeFileSync(file.relativePath, file.lines.join(file.EOL));
-					// TODO regenerate pickles
+					fs.writeFileSync(gherkinData.file.relativePath, gherkinData.file.lines.join(gherkinData.file.EOL));
 
+					const regeneratedGherkinData = await readAndParseFile(gherkinData.file.relativePath);
+
+					gherkinData.feature = regeneratedGherkinData.feature;
+					gherkinData.pickles = regeneratedGherkinData.pickles;
+					gherkinData.file = regeneratedGherkinData.file;
 				} else {
 					errors = errors.concat(error.map(e => ({
 						level: ruleLevel,
@@ -119,7 +121,7 @@ export async function runAllEnabledRules(
 				}
 			}
 		}
-	});
+	}
 	return new RuleErrors(errors);
 }
 
