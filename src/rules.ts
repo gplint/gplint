@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 
-import * as glob from 'glob';
+import glob from 'fast-glob';
 import _ from 'lodash';
 
 import {
@@ -45,8 +45,7 @@ export async function getAllRules(additionalRulesDirs?: string[]): Promise<Rules
 		rulesDir = path.resolve(rulesDir);
 		const rulesWildcard = path.join(rulesDir, '*.?(c|m)@(j|t)s'); // .js, .cjs, .mjs (and TS equivalents)
 		for (const file of glob.sync(rulesWildcard, {
-			windowsPathsNoEscape: true,
-			ignore: '**/*.d.?(c|m)ts'
+			ignore: ['**/*.d.?(c|m)ts']
 		})) {
 			const rule = await import(pathToFileURL(file).toString()) as Rule;
 			rules[rule.name] = rule;

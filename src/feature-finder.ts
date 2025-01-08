@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import * as glob from 'glob';
+import glob from 'fast-glob';
 import fs from 'fs';
 import path from 'path';
 import * as logger from './logger.js';
@@ -41,7 +41,6 @@ export function getFeatureFiles(args: string[], ignoreArg?: string[]): string[] 
 		const globOptions = {
 			ignore: getIgnorePatterns(ignoreArg),
 			nodir: true,
-			windowsPathsNoEscape: true,
 		};
 
 		files = files.concat(glob.sync(fixedPattern, globOptions));
@@ -49,7 +48,7 @@ export function getFeatureFiles(args: string[], ignoreArg?: string[]): string[] 
 	return _.uniq(files);
 }
 
-export function getIgnorePatterns(ignoreArg?: string[]): string | string[] {
+export function getIgnorePatterns(ignoreArg?: string[]): string[] {
 	if (ignoreArg) {
 		return ignoreArg;
 	} else if (fs.existsSync(defaultIgnoreFileName)) {
@@ -59,5 +58,5 @@ export function getIgnorePatterns(ignoreArg?: string[]): string | string[] {
 			.split(/[\n|\r]/)
 			.filter(i => i !== ''); // remove empty strings
 	}
-	return defaultIgnoredFiles;
+	return _.castArray(defaultIgnoredFiles);
 }

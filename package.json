@@ -54,7 +54,7 @@
     "@cucumber/gherkin": "30.0.4",
     "@cucumber/gherkin-streams": "5.0.1",
     "chalk": "5.3.0",
-    "glob": "11.0.0",
+    "fast-glob": "3.3.3",
     "lodash": "4.17.21",
     "strip-ansi": "7.1.0",
     "strip-json-comments": "5.0.1",
