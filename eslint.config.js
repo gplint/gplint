@@ -89,6 +89,7 @@ export default tseslint.config(
 			}],
 			'@typescript-eslint/prefer-nullish-coalescing': 'off', // requires strictNullChecks
 			'@typescript-eslint/no-unnecessary-condition': 'off', // requires strictNullChecks
+			'@typescript-eslint/no-unnecessary-boolean-literal-compare': 'off', // requires strictNullChecks
 
 			"promise/prefer-await-to-then": "error",
 			"promise/prefer-await-to-callbacks": "error",
