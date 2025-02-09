@@ -131,7 +131,7 @@ export const documentation: Documentation = {
 			}],
 		},
 	}, {
-		title: 'Limit `When` to 1 when are pu together.',
+		title: 'Limit `When` to 1 when are put together.',
 		description: 'Limit `When` to 1, but only if there are not other keywords between.',
 		config: {
 			[name]: ['error', {
