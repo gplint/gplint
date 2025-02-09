@@ -27,6 +27,7 @@ Feature: Feature with max-keywords violations
     When this When is allowed
     And this When is allowed
     Then this Then is allowed
+    Given this Given exceeds the limit
     When this When exceeds the limit
     And this When also exceeds the limit
 
@@ -42,7 +43,7 @@ Feature: Feature with max-keywords violations
     When this is a Given step
     Then this is a Given step
 
-  Scenario: With loooooong used keyword
+  Scenario: With loooooong used conjunction
     Given this Given is allowed
     When this When is allowed
     And this is alloweed

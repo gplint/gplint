@@ -38,7 +38,13 @@ describe('max-keywords', function() {
 
 			{
 				messageElements: { keyword: 'given', count: 2, expected: 1 },
-				line: 37,
+				line: 26,
+				column: 5,
+			},
+
+			{
+				messageElements: { keyword: 'given', count: 2, expected: 1 },
+				line: 38,
 				column: 5,
 			},
 		]);
@@ -81,13 +87,13 @@ describe('max-keywords', function() {
 
 			{
 				messageElements: { keyword: 'given', count: 2, expected: 1 },
-				line: 37,
+				line: 38,
 				column: 5,
 			},
 
 			{
 				messageElements: { keyword: 'when', count: 12, expected: 2 },
-				line: 47,
+				line: 48,
 				column: 5,
 			},
 		]);
@@ -129,6 +135,10 @@ describe('max-keywords', function() {
 			},
 
 			{
+				messageElements: { keyword: 'given', count: 2, expected: 1 },
+				line: 26,
+				column: 5,
+			}, {
 				messageElements: { keyword: 'when', count: 4, expected: 2 },
 				line: 27,
 				column: 5,
@@ -136,13 +146,67 @@ describe('max-keywords', function() {
 
 			{
 				messageElements: { keyword: 'given', count: 2, expected: 1 },
-				line: 37,
+				line: 38,
 				column: 5,
 			},
 
 			{
 				messageElements: { keyword: 'when', count: 12, expected: 2 },
-				line: 47,
+				line: 48,
+				column: 5,
+			},
+		]);
+	});
+
+	it('raises errors when there are violations ignoring conjunctions and contiguous disabled', function() {
+		return runTest('max-keywords/Violations.feature', {
+			given: 1,
+			when: 2,
+			then: 3,
+			onlyContiguous: false,
+			ignoreConjunctions: true
+		}, [
+			{
+				messageElements: { keyword: 'given', count: 2, expected: 1 },
+				line: 4,
+				column: 5,
+			}, {
+				messageElements: { keyword: 'when', count: 3, expected: 2 },
+				line: 6,
+				column: 5,
+			}, {
+				messageElements: { keyword: 'then', count: 4, expected: 3 },
+				line: 9,
+				column: 5,
+			},
+
+			{
+				messageElements: { keyword: 'given', count: 2, expected: 1 },
+				line: 26,
+				column: 5,
+			},
+		]);
+	});
+
+	it('raises errors when there are violations ignoring conjunctions and contiguous enabled', function() {
+		return runTestContiguous('max-keywords/Violations.feature', {
+			given: 1,
+			when: 2,
+			then: 3,
+			onlyContiguous: true,
+			ignoreConjunctions: true
+		}, [
+			{
+				messageElements: { keyword: 'given', count: 2, expected: 1 },
+				line: 4,
+				column: 5,
+			}, {
+				messageElements: { keyword: 'when', count: 3, expected: 2 },
+				line: 6,
+				column: 5,
+			}, {
+				messageElements: { keyword: 'then', count: 4, expected: 3 },
+				line: 9,
 				column: 5,
 			},
 		]);
@@ -165,26 +229,26 @@ describe('max-keywords', function() {
 			},
 
 			{
-				messageElements: { keyword: 'given', count: 1, expected: 0 },
+				messageElements: { keyword: 'given', count: 2, expected: 0 },
 				line: 26,
 				column: 5,
 			},
 
 			{
 				messageElements: { keyword: 'given', count: 2, expected: 0 },
-				line: 37,
+				line: 38,
 				column: 5,
 			},
 
 			{
 				messageElements: { keyword: 'given', count: 1, expected: 0 },
-				line: 41,
+				line: 42,
 				column: 5,
 			},
 
 			{
 				messageElements: { keyword: 'given', count: 1, expected: 0 },
-				line: 46,
+				line: 47,
 				column: 5,
 			},
 		]);
