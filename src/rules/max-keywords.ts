@@ -10,6 +10,7 @@ export const availableConfigs = {
 	when: -1,
 	then: -1,
 	onlyContiguous: false,
+	ignoreConjunctions: false,
 };
 
 type KeywordList = 'given' | 'when' | 'then';
@@ -34,7 +35,7 @@ export function run({feature}: GherkinData, configuration: RuleSubConfig<typeof 
 				feature.language,
 			) as KeywordList;
 			if ([StepKeywordType.CONJUNCTION, StepKeywordType.UNKNOWN].includes(step.keywordType) ) {
-				if (lastKeyword == null) {
+				if (mergedConfiguration.ignoreConjunctions || lastKeyword == null) {
 					return;
 				}
 
@@ -103,6 +104,11 @@ export const documentation: Documentation = {
 		name: 'onlyContiguous',
 		type: 'boolean',
 		description: 'If true, only counts contiguous steps, resetting the limit if another keyword is used.',
+		default: availableConfigs.onlyContiguous.toString(),
+	}, {
+		name: 'ignoreConjunctions',
+		type: 'boolean',
+		description: 'If true, only counts the main keywords, ignoring conjunctions (`And`, `But`, `*`).',
 		default: availableConfigs.onlyContiguous.toString(),
 	}],
 	examples: [{
