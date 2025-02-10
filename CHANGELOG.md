@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2025-02-10
+### Internal
+### 🚀 New Feature
+* Autofix improvements by @Nyaran in https://github.com/gplint/gplint/pull/763
+  * Better performance on autofix
+  * Preserve the used EOL type on files
+  * Pickles are reloaded after fix are applied
+  * Additionally, some rule tweaks added:
+    * `indentation`:
+      * Allow to define spaces, tabs or both as valid indentation character (autofixable)
+    * Some performance improvements
+  * `no-trailing-spaces` :
+    * Some performance improvements
+* Add [`max-keywords`](https://gplint.github.io/docs/rules/max-keywords) rule by @Nyaran in https://github.com/gplint/gplint/pull/791
+
+## [2.2.0] - 2024-12-08
+### Internal
+* Create documentation site https://gplint.github.io by @Nyaran in #574
+* Add PR labels for release by @Nyaran in #694
+
 ## [2.1.0] - 2024-09-29
 ### 🚀 New Feature
 * feature: auto fix problems by @lucas-it in https://github.com/gplint/gplint/pull/672
