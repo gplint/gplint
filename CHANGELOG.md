@@ -5,7 +5,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [2.3.0] - 2025-02-10
-### Internal
 ### 🚀 New Feature
 * Autofix improvements by @Nyaran in https://github.com/gplint/gplint/pull/763
   * Better performance on autofix
