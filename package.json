@@ -51,7 +51,7 @@
   },
   "types": "./build/index.d.ts",
   "dependencies": {
-    "@cucumber/gherkin": "32.0.0",
+    "@cucumber/gherkin": "32.0.1",
     "@cucumber/gherkin-streams": "5.0.1",
     "chalk": "5.3.0",
     "glob": "11.0.0",
