@@ -47,7 +47,7 @@ jobs:
 
       # Report Coverage
       - name: Report coverage
-        uses: codecov/codecov-action@v5.4.0
+        uses: codecov/codecov-action@v5.4.2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           directory: ./coverage/
