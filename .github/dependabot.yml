@@ -17,3 +17,45 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: increase
+    groups:
+      chai:
+        patterns:
+          - "@types/chai"
+          - "chai"
+      eslint:
+        patterns:
+          - "@eslint/*"
+          - "eslint"
+          - "eslint-*"
+          - "typescript-eslint"
+      lodash:
+        patterns:
+          - "@types/lodash"
+          - "lodash"
+      mocha:
+        patterns:
+          - "@types/mocha"
+          - "mocha"
+      mock-fs:
+        patterns:
+          - "@types/mock-fs"
+          - "mock-fs"
+      sinon:
+        patterns:
+          - "@types/sinon"
+          - "sinon"
+      text-table:
+        patterns:
+          - "@types/text-table"
+          - "text-table"
+      yargs:
+        patterns:
+          - "@types/yargs"
+          - "yargs"
+      cucumber:
+        patterns:
+          - "@cucumber/*"
+      typescript:
+        patterns:
+          - "typescript"
+          - "ts-node"
