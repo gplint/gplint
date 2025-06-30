@@ -66,7 +66,7 @@
   "devDependencies": {
     "@eslint/js": "9.29.0",
     "@types/chai": "5.2.2",
-    "@types/lodash": "4.17.18",
+    "@types/lodash": "4.17.19",
     "@types/mocha": "10.0.10",
     "@types/mock-fs": "4.13.4",
     "@types/node": "24.0.4",
