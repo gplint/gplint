@@ -44,7 +44,7 @@
     "postbuild": "node -p \"'export const LIB_VERSION = \\'0.0.0\\';'\" > src/version.ts",
     "prepare": "npm run build",
     "demo": "node ./build/cli/index.js -c ./test-data-wip/.gplintrc test-data-wip/**",
-    "lint": "eslint --max-warnings 0 ./src ./test",
+    "lint": "eslint --max-warnings 0 src test",
     "test": "run-s -c -n lint test:unit:cov",
     "test:unit": "cross-env NODE_ENV=test mocha --recursive",
     "test:unit:cov": "c8 npm run test:unit"
