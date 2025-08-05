@@ -242,12 +242,12 @@ This rule can be configured in a more granular level and uses following rules by
 		name: 'type',
 		type: 'string',
 		description: 'Defines the type of indentation to use. If `both`, it will allow spaces and tabs. If `space`, it will use spaces. If `tab`, it will use tabs.',
-		default: availableConfigs.type.toString(),
+		default: availableConfigs.type,
 	}, {
 		name: 'preferType',
 		type: 'string',
 		description: 'Defines the preferred type of indentation to use. If `space`, it will use spaces. If `tab`, it will use tabs. (Only applies to auto-fixing)',
-		default: availableConfigs.preferType.toString(),
+		default: availableConfigs.preferType,
 	}],
 	examples: [{
 		title: 'Example',
