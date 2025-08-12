@@ -12,7 +12,7 @@ jobs:
     if:  startsWith(github.head_ref, 'release/')
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v5.0.0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4.4.0
