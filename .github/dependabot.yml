@@ -58,4 +58,4 @@ updates:
       typescript:
         patterns:
           - "typescript"
-          - "ts-node"
+          - "tsx"
