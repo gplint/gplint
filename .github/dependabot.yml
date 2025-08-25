@@ -58,4 +58,5 @@ updates:
       typescript:
         patterns:
           - "typescript"
+          - "typescript-eslint"
           - "tsx"
