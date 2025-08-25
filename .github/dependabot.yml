@@ -36,6 +36,7 @@ updates:
         patterns:
           - "@types/mocha"
           - "mocha"
+          - "mocha-*"
       mock-fs:
         patterns:
           - "@types/mock-fs"

@@ -9,7 +9,7 @@
     "src/types.ts",
     "src/version.ts"
   ],
-  "report-dir": "./coverage",
+  "report-dir": "./reports/coverage",
   "reporter": [
     "text",
     "lcov"

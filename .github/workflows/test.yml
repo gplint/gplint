@@ -46,8 +46,16 @@ jobs:
         run: npm test
 
       # Report Coverage
-      - name: Report coverage
-        uses: codecov/codecov-action@v5.5.0
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./coverage/
+          directory: ./reports/coverage/
+
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          tags: os-${{ matrix.os }},arch-${{ matrix.architecture }},node-${{ matrix.node-version }}
+          file: ./reports/junit.xml
