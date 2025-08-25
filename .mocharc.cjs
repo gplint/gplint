@@ -4,8 +4,8 @@ module.exports = {
 	diff: true,
 	extension: ['ts', 'js'],
 	package: './package.json',
-	loader: 'ts-node/esm',
 	ui: 'bdd',
+	import: 'tsx',
 	recursive: true,
 	'watch-files': [
 		'src/**/*.js',

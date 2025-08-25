@@ -28,11 +28,7 @@ const LEVELS = [
 
 export async function getAllRules(additionalRulesDirs?: string[]): Promise<Rules> {
 	if ((additionalRulesDirs?.length ?? 0) > 0) {
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		if (process[Symbol.for('ts-node.register.instance')] == null) { // Check if ts-node was registered previously
-			await loadRegister();
-		}
+		await loadRegister();
 	}
 
 	const rules = {} as Rules;
@@ -127,14 +123,24 @@ export async function runAllEnabledRules(
 
 async function loadRegister(): Promise<void> {
 	try {
-		const {register} = await import('ts-node');
-		register({
-			compilerOptions: {
-				allowJs: true
-			}
-		});
+		// @ts-expect-error there are no types for tsx
+		await import('tsx');
 		/* c8 ignore next 3 */
 	} catch (err) { // eslint-disable-line @typescript-eslint/no-unused-vars
-		/* empty */
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		if (process[Symbol.for('ts-node.register.instance')] == null) { // Check if ts-node was registered previously
+			try {
+				const {register} = await import('ts-node');
+				register({
+					compilerOptions: {
+						allowJs: true
+					}
+				});
+				/* c8 ignore next 3 */
+			} catch (err) { // eslint-disable-line @typescript-eslint/no-unused-vars
+				/* empty */
+			}
+		}
 	}
 }
