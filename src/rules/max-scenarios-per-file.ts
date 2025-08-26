@@ -48,12 +48,12 @@ export const documentation: Documentation = {
 		name: 'maxScenarios',
 		type: 'number',
 		description: 'The maximum scenarios per file after which the rule fails',
-		default: availableConfigs.maxScenarios.toString(),
+		default: availableConfigs.maxScenarios,
 	}, {
 		name: 'countOutlineExamples',
 		type: 'boolean',
 		description: 'whether to count every example row for a Scenario Outline, as opposed to just 1 for the whole block',
-		default: availableConfigs.countOutlineExamples.toString(),
+		default: availableConfigs.countOutlineExamples,
 	}],
 	examples: [{
 		title: 'Example',
