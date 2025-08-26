@@ -50,6 +50,7 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          flags: ${{ matrix.os }}_${{ matrix.architecture }}_node${{ matrix.node-version }},unit
           directory: ./reports/coverage/
 
       - name: Upload test results to Codecov
@@ -57,5 +58,5 @@ jobs:
         uses: codecov/test-results-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          tags: os-${{ matrix.os }},arch-${{ matrix.architecture }},node-${{ matrix.node-version }}
+          flags: ${{ matrix.os }}_${{ matrix.architecture }}_node${{ matrix.node-version }},unit
           file: ./reports/junit.xml
