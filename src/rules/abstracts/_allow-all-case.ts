@@ -119,7 +119,7 @@ export const configurationDocumentation = [{
 	name: Levels.Global,
 	type: 'boolean',
 	description: 'The rule affects globally, to all nodes (except if the opposite is specified by config).',
-	default: availableConfigs.Global.toString(),
+	default: availableConfigs.Global,
 }, {
 	name: Levels.Description,
 	type: 'boolean',
