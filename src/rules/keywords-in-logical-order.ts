@@ -89,7 +89,7 @@ export const documentation: Documentation = {
 		name: 'detectMissingKeywords',
 		type: 'boolean',
 		description: 'Whether to ignore the lack of some keyword that violates the structure.',
-		default: availableConfigs.detectMissingKeywords.toString(),
+		default: availableConfigs.detectMissingKeywords,
 	}],
 	examples: [{
 		title: 'Don\'t detect missing keywords',

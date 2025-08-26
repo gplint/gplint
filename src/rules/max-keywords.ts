@@ -89,27 +89,27 @@ export const documentation: Documentation = {
 		name: 'given',
 		type: 'number',
 		description: 'Max allowed steps for Given. 0 means is not allowed and a negative value (or undefined) means unlimited.',
-		default: availableConfigs.given.toString(),
+		default: availableConfigs.given,
 	}, {
 		name: 'when',
 		type: 'number',
 		description: 'Max allowed steps for When. 0 means is not allowed and a negative value (or undefined) means unlimited.',
-		default: availableConfigs.when.toString(),
+		default: availableConfigs.when,
 	}, {
 		name: 'then',
 		type: 'number',
 		description: 'Max allowed steps for Then. 0 means is not allowed and a negative value (or undefined) means unlimited.',
-		default: availableConfigs.then.toString(),
+		default: availableConfigs.then,
 	}, {
 		name: 'onlyContiguous',
 		type: 'boolean',
 		description: 'If true, only counts contiguous steps, resetting the limit if another keyword is used.',
-		default: availableConfigs.onlyContiguous.toString(),
+		default: availableConfigs.onlyContiguous,
 	}, {
 		name: 'ignoreConjunctions',
 		type: 'boolean',
 		description: 'If true, only counts the main keywords, ignoring conjunctions (`And`, `But`, `*`).',
-		default: availableConfigs.onlyContiguous.toString(),
+		default: availableConfigs.onlyContiguous,
 	}],
 	examples: [{
 		title: 'Limit `When` to 1 occurrence',

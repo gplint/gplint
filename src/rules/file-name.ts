@@ -63,7 +63,7 @@ The list of supported styles is:
 		name: 'allowAcronyms',
 		type: 'boolean',
 		description: 'Allow to use acronyms in capitalized form when using `camelCase` style.',
-		default: availableConfigs.allowAcronyms.toString(),
+		default: availableConfigs.allowAcronyms,
 		link: 'acronyms-on-camelcase'
 	}],
 	examples: [{
