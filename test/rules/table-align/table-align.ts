@@ -152,24 +152,62 @@ describe('Table Align Rule', function() {
 		]);
 	});
 
-	it('tables with pipe symbols', function() {
+	it('tables with escaped characters', function() {
 		return runTest('table-align/escape.feature', {}, [
-			// 1st cell
+			// escaped pipes, 1st cell
 			{
 				messageElements: {cellValue: '\\|this'},
 				line: 6,
 				column: 9,
 			},
-			// 2nd cell
+			// escaped pipes, 2nd cell
 			{
 				messageElements: {cellValue: '\\| isn\'t \\|'},
 				line: 6,
 				column: 18,
 			},
-			// 3rd cell
+			// escaped pipes, 3rd cell
 			{
 				messageElements: {cellValue: 'aligned\\|'},
 				line: 6,
+				column: 32,
+			},
+
+			// backslashes, 1st cell
+			{
+				messageElements: {cellValue: '\\this'},
+				line: 10,
+				column: 9,
+			},
+			// backslashes, 2nd cell
+			{
+				messageElements: {cellValue: '\\ isn\'t \\'},
+				line: 10,
+				column: 17,
+			},
+			// backslashes, 3rd cell
+			{
+				messageElements: {cellValue: 'aligned\\'},
+				line: 10,
+				column: 30,
+			},
+
+			// escaped backslashes, 1st cell
+			{
+				messageElements: {cellValue: '\\\\this'},
+				line: 14,
+				column: 9,
+			},
+			// escaped backslashes, 2nd cell
+			{
+				messageElements: {cellValue: '\\\\ isn\'t \\\\'},
+				line: 14,
+				column: 18,
+			},
+			// escaped backslashes, 3rd cell
+			{
+				messageElements: {cellValue: 'aligned\\\\'},
+				line: 14,
 				column: 32,
 			},
 		]);
