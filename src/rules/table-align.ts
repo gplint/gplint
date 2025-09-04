@@ -19,26 +19,26 @@ export function run({feature, file}: GherkinData, configuration: RuleSubConfig<t
 			return;
 		}
 
-		rows.forEach(row => {
-			row.cells.forEach(cell => {
-				cell.value = cell.value.replace(/\|/g, '\\|');
-			});
-		});
+		const tableLines = rows.map(row => _splitTableRow(file.lines[row.location.line - 1]));
 
-		const columnsCount = rows[0].cells.length;
-		const columns = _.range(columnsCount).map(i => rows.map(row => row.cells[i]));
+		const columnsCount = tableLines[0].length;
+		const columns = _.range(columnsCount).map(i => tableLines.map(row => row[i]));
 
-		const columnsMaxLength = columns.map(column => Math.max(...column.map(cell => cell.value.length)));
+		const columnsMaxLength = columns.map(column => Math.max(...column.map(cell => cell.trim().length)));
 
-		rows.forEach(row => {
+		rows.forEach((row, rowIndex) => {
 			const realLine = _.trim(file.lines[row.location.line - 1].trim(), TABLE_SEPARATOR);
 			const realCells = realLine.split(TABLE_SPLITTER);
 
-			row.cells.forEach((cell, index) => {
-				const rowLine = ` ${cell.value.padEnd(columnsMaxLength[index])} `;
+			row.cells.forEach((cell, cellIndex) => {
+				const cellValue = tableLines[rowIndex][cellIndex].trim();
+				const expectedCellValue = ` ${cellValue.padEnd(columnsMaxLength[cellIndex])} `;
 
-				if (rowLine !== realCells[index]) {
-					errors.push(createError(cell));
+				if (expectedCellValue !== realCells[cellIndex]) {
+					errors.push(createError({
+						location: cell.location,
+						value: cellValue
+					}));
 				}
 			});
 		});
@@ -79,6 +79,31 @@ function createError(cell: TableCell): RuleError {
 		line: cell.location.line,
 		column: cell.location.column,
 	};
+}
+
+function _splitTableRow(line: string): string[] {
+	const tableRow = line.trim();
+
+	const result = [];
+	let current = '';
+	let escapeCount = 0;
+
+	for (const char of tableRow) {
+		if (char === '\\') {
+			escapeCount++;
+			current += char;
+		} else if (char === '|' && escapeCount % 2 === 0) {
+			result.push(current);
+			current = '';
+			escapeCount = 0;
+		} else {
+			current += char;
+			escapeCount = 0;
+		}
+	}
+	result.push(current);
+	return result
+		.slice(1, -1); // Remove the first and last elements, which are always empty due to leading and trailing '|'
 }
 
 export const documentation: Documentation = {
