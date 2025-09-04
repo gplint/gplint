@@ -4,7 +4,7 @@ changelog:
       - ignore-for-release
       - release-pr
     authors:
-      - dependabot
+      - dependabot[bot]
   categories:
     - title: 💥 Breaking Change
       labels:
