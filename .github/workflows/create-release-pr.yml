@@ -23,6 +23,9 @@ env:
   GIT_USER_NAME: 'Luis Zurro de Cos'
   GIT_USER_EMAIL: '1042532+Nyaran@users.noreply.github.com'
 
+permissions:
+  contents: read
+  pull-requests: write
 jobs:
   release:
     runs-on: ubuntu-latest
