@@ -69,7 +69,7 @@
 		"@types/lodash": "4.17.20",
 		"@types/mocha": "10.0.10",
 		"@types/mock-fs": "4.13.4",
-		"@types/node": "24.6.0",
+		"@types/node": "24.6.2",
 		"@types/sinon": "17.0.4",
 		"@types/text-table": "0.2.5",
 		"@types/yargs": "17.0.33",
@@ -86,7 +86,7 @@
 		"rimraf": "6.0.1",
 		"sinon": "21.0.0",
 		"tsx": "4.20.6",
-		"typescript": "5.9.2",
+		"typescript": "5.9.3",
 		"typescript-eslint": "8.45.0"
 	},
 	"optionalDependencies": {
