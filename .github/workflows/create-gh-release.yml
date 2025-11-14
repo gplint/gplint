@@ -32,7 +32,7 @@ jobs:
         run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
       - name: Create Release
-        uses: softprops/action-gh-release@v2.4.1
+        uses: softprops/action-gh-release@v2.4.2
         with:
           draft: true
           tag_name: v${{ steps.get-version.outputs.version }}
