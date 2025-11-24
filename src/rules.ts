@@ -42,7 +42,7 @@ export async function getAllRules(additionalRulesDirs?: string[]): Promise<Rules
 		const rulesWildcard = path.join(rulesDir, '*.?(c|m)@(j|t)s'); // .js, .cjs, .mjs (and TS equivalents)
 		for (const file of glob.sync(rulesWildcard, {
 			windowsPathsNoEscape: true,
-			ignore: '**/*.d.?(c|m)ts'
+			ignore: path.join(rulesDir, '**/*.d.?(c|m)ts')
 		})) {
 			const rule = await import(pathToFileURL(file).toString()) as Rule;
 			rules[rule.name] = rule;
