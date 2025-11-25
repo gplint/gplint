@@ -32,7 +32,7 @@ export function getNodeType(node: GherkinKeyworded, language: string): string {
 	}
 }
 
-export function getLanguageInsensitiveKeyword(node: GherkinKeyworded, language = ''): string | undefined {
+export function getLanguageInsensitiveKeyword(node: GherkinKeyworded, language = ''): string {
 	const languageMapping = Gherkin.dialects[language];
 
 	return _.findKey(languageMapping, values => values instanceof Array && values.includes(node.keyword));

@@ -48,7 +48,7 @@ export interface Rule {
 
 export type RulesConfig = Record<string, RuleConfig>;
 
-export type RuleConfig = undefined | string | number | RuleConfigArray;
+export type RuleConfig = string | number | RuleConfigArray;
 export type RuleConfigArray = [string | number, ...RuleSubConfig<any>[]] // eslint-disable-line @typescript-eslint/no-explicit-any
 
 export type RuleSubConfig<T> = T;

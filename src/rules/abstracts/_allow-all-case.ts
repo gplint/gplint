@@ -17,15 +17,15 @@ const Levels = {
 
 export const availableConfigs = {
 	[Levels.Global]: false as boolean,
-	[Levels.Description]: undefined as boolean | undefined,
-	[Levels.Feature]: undefined as boolean | undefined,
-	[Levels.Rule]: undefined as boolean | undefined,
-	[Levels.Background]: undefined as boolean | undefined,
-	[Levels.Scenario]: undefined as boolean | undefined,
-	[Levels.Step]: undefined as boolean | undefined,
-	[Levels.Example]: undefined as boolean | undefined,
-	[Levels.ExampleHeader]: undefined as boolean | undefined,
-	[Levels.ExampleBody]: undefined as boolean | undefined,
+	[Levels.Description]: undefined as boolean,
+	[Levels.Feature]: undefined as boolean,
+	[Levels.Rule]: undefined as boolean,
+	[Levels.Background]: undefined as boolean,
+	[Levels.Scenario]: undefined as boolean,
+	[Levels.Step]: undefined as boolean,
+	[Levels.Example]: undefined as boolean,
+	[Levels.ExampleHeader]: undefined as boolean,
+	[Levels.ExampleBody]: undefined as boolean,
 };
 
 export function run(
