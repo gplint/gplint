@@ -39,16 +39,22 @@ export async function getAllRules(additionalRulesDirs?: string[]): Promise<Rules
 
 	for (let rulesDir of rulesDirs) {
 		rulesDir = path.resolve(rulesDir);
-		const rulesWildcard = path.join(rulesDir, '*.?(c|m)@(j|t)s'); // .js, .cjs, .mjs (and TS equivalents)
+		const rulesWildcard = safePathJoin(rulesDir, '*.?(c|m)@(j|t)s'); // .js, .cjs, .mjs (and TS equivalents)
 		for (const file of glob.sync(rulesWildcard, {
 			windowsPathsNoEscape: true,
-			ignore: path.join(rulesDir, '**/*.d.?(c|m)ts')
+			ignore: safePathJoin(rulesDir, '**/*.d.?(c|m)ts')
 		})) {
 			const rule = await import(pathToFileURL(file).toString()) as Rule;
 			rules[rule.name] = rule;
 		}
 	}
 	return rules;
+}
+
+function safePathJoin(...paths: string[]) {
+	const fullPath = path.join(...paths);
+
+	return path.sep === path.posix.sep ? fullPath : fullPath.replaceAll(path.sep, path.posix.sep);
 }
 
 export async function getRule(rule: string, additionalRulesDirs?: string[]): Promise<Rule | undefined> {
