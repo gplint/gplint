@@ -1,12 +1,14 @@
 import _ from 'lodash';
 import * as logger from './../logger.js';
-import {Documentation, GherkinData, RuleError, RuleSubConfig} from '../types.js';
+import {Documentation, ErrorData, FileData, GherkinData, RuleError, RuleSubConfig} from '../types.js';
 
 export const name = 'new-line-at-eof';
 export const availableConfigs = [
 	'yes',
 	'no',
 ];
+
+type NewLineAtEofErrorData = ErrorData
 
 export function run({file}: GherkinData, configuration: RuleSubConfig<string>): RuleError[] {
 	const errors = [] as RuleError[];
@@ -33,6 +35,16 @@ export function run({file}: GherkinData, configuration: RuleSubConfig<string>): 
 	}
 
 	return errors;
+}
+
+export function fix(error: NewLineAtEofErrorData, file: FileData, configuration: RuleSubConfig<string>): void {
+	if (configuration === 'yes') {
+		file.lines.push('');
+	} else if (configuration === 'no') {
+		while (_.last(file.lines) === '') {
+			file.lines.pop();
+		}
+	}
 }
 
 export const documentation: Documentation = {
