@@ -13,7 +13,7 @@ export async function verifyConfigurationFile(config: RulesConfig, additionalRul
 	return errors;
 }
 
-async function verifyRuleConfiguration(rule: string, ruleConfig: RuleConfig, additionalRulesDirs: string[] | undefined, errors: string[]): Promise<void> {
+async function verifyRuleConfiguration(rule: string, ruleConfig: RuleConfig, additionalRulesDirs: string[], errors: string[]): Promise<void> {
 	const enablingSettings = ['off', '0', 'warn', '1', 'error', 'on', '2'];
 	const genericErrorMsg = `Invalid rule configuration for "${rule}" -`;
 
@@ -44,7 +44,7 @@ async function verifyRuleConfiguration(rule: string, ruleConfig: RuleConfig, add
 	}
 }
 
-async function testSubconfig(genericErrorMsg: string, rule: string, subConfig: RuleSubConfig<unknown>, isValidSubConfig: (availableConfigs: Rule['availableConfigs'], subConfig: RuleSubConfig<unknown>) => boolean, additionalRulesDirs: string[] | undefined, errors: string[]): Promise<void> {
+async function testSubconfig(genericErrorMsg: string, rule: string, subConfig: RuleSubConfig<unknown>, isValidSubConfig: (availableConfigs: Rule['availableConfigs'], subConfig: RuleSubConfig<unknown>) => boolean, additionalRulesDirs: string[], errors: string[]): Promise<void> {
 	const ruleObj = await rules.getRule(rule, additionalRulesDirs);
 	if (!isValidSubConfig(ruleObj?.availableConfigs, subConfig)) {
 		errors.push(`${genericErrorMsg} The rule does not have the specified configuration option "${subConfig as string}"`);
