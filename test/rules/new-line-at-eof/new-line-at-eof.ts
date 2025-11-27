@@ -1,3 +1,5 @@
+import * as os from 'node:os';
+
 import {expect} from 'chai';
 import * as sinon from 'sinon';
 
@@ -7,6 +9,7 @@ import {FileData, RuleSubConfig} from '../../../src/types.js';
 
 const runTestRequireNewLine = ruleTestBase.createRuleTest(rule, 'New line at EOF (end of file) is required');
 const runTestDisallowNewLine = ruleTestBase.createRuleTest(rule, 'New line at EOF (end of file) is not allowed');
+const runFixTest = ruleTestBase.createRuleFixTest(rule);
 
 describe('New Line at EOF Rule', function() {
 	beforeEach(function() {
@@ -65,5 +68,15 @@ describe('New Line at EOF Rule', function() {
 			line: 6,
 			column: 0
 		}]);
+	});
+
+	describe('autofix', function() {
+		it('should fix missing eof when is required', function() {
+			return runFixTest('new-line-at-eof/NoNewLineAtEOF.feature', 'yes', new RegExp(`${os.EOL}$`));
+		});
+
+		it('should fix forbidden eof when is not required', function() {
+			return runFixTest('new-line-at-eof/NewLineAtEOF.feature', 'no', new RegExp(`[^${os.EOL}]$`));
+		});
 	});
 });

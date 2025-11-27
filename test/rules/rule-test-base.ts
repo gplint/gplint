@@ -31,7 +31,7 @@ export function createRuleTest(rule: Rule, messageTemplate: string): RunTestFunc
 }
 
 export function createRuleFixTest(rule: Rule) {
-	return async function runTest(featureFile: string, configuration: RuleSubConfig<unknown>, expected: string): Promise<void> {
+	return async function runTest(featureFile: string, configuration: RuleSubConfig<unknown>, expected: string | RegExp): Promise<void> {
 		const { feature, pickles, file } = await linter.readAndParseFile(`test/rules/${featureFile}`);
 
 		const errors = rule.run({ feature, pickles, file }, configuration);
@@ -41,6 +41,10 @@ export function createRuleFixTest(rule: Rule) {
 				rule.fix(error as ErrorData, file, configuration);
 			}
 		});
-		assert.equal(file.lines.join(file.EOL), expected);
+		if (expected instanceof RegExp) {
+			assert.match(file.lines.join(file.EOL), expected);
+		} else {
+			assert.equal(file.lines.join(file.EOL), expected);
+		}
 	};
 }
