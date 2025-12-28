@@ -53,12 +53,14 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ${{ matrix.os }}_${{ matrix.architecture }}_node${{ matrix.node-version }},unit
+          report_type: coverage
           directory: ./reports/coverage/
 
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ${{ matrix.os }}_${{ matrix.architecture }}_node${{ matrix.node-version }},unit
-          file: ./reports/junit.xml
+          report_type: test_results
+          files: ./reports/junit.xml
