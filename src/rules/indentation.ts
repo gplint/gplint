@@ -159,13 +159,12 @@ export function fix(error: IndentationErrorData, file: FileData, configuration: 
 	const mergedConfiguration = mergeConfiguration(configuration);
 
 	const lineContent = file.lines[error.location.line - 1];
-	const lineTrimmed = lineContent.trimStart();
 
 	const indentChar = mergedConfiguration.type === 'both' && [' ', '\t'].includes(lineContent[0])
 		? lineContent[0]
 		: (mergedConfiguration.type === 'both' ? mergedConfiguration.preferType : mergedConfiguration.type) === 'tab' ? '\t' : ' ';
 
-	replaceNodeTextByRange(error, file, indentChar.repeat(error.expectedIndentation) + lineTrimmed, 0, error.location.column - 1);
+	replaceNodeTextByRange(error, file, indentChar.repeat(error.expectedIndentation), 0, error.location.column - 1);
 }
 
 export const documentation: Documentation = {

@@ -39,8 +39,17 @@ export function run({feature}: GherkinData): NoDuplicateTagsErrorData[] {
  */
 export function fix(error: NoDuplicateTagsErrorData, file: FileData): void {
 	const fileLine = error.location.line - 1;
-	const startCol = error.location.column - 2; // Move back to include the '@' and the space before it
+	let startCol = error.location.column - 1;
 	const endCol = startCol + error.tagName.length;
+	let expectedOriginal = error.tagName;
+
+	const lineText = file.lines?.[fileLine] ?? '';
+
+	// Remove a preceding whitespace separator if present
+	if (startCol > 0 && /\s/.test(lineText[startCol - 1])) {
+		startCol = startCol - 1;
+		expectedOriginal = lineText[startCol] + expectedOriginal;
+	}
 
 	file.textEdits.push({
 		startLine: fileLine,
@@ -48,7 +57,7 @@ export function fix(error: NoDuplicateTagsErrorData, file: FileData): void {
 		endLine: fileLine,
 		endCol,
 		text: '',
-		expectedOriginal: error.tagName,
+		expectedOriginal,
 		removeIfEmptyLine: true,
 	});
 }

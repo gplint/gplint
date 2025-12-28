@@ -76,7 +76,6 @@ describe('AutoFix helpers', () => {
 					endLine: 1,
 					endCol: 3,
 					text: 'new',
-					expectedOriginal: 'line2',
 					removeIfEmptyLine: true,
 				},
 			]);
@@ -103,7 +102,6 @@ describe('AutoFix helpers', () => {
 					endLine: 2,
 					endCol: 0,
 					text: 'new',
-					expectedOriginal: '',
 					removeIfEmptyLine: true,
 				},
 			]);

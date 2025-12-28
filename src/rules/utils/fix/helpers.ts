@@ -18,15 +18,12 @@ export function replaceNodeText(error: ErrorData, file: FileData, fixedText: str
 export function replaceNodeTextByRange(error: ErrorData, file: FileData, newText: string, startOffset: number, endOffset: number) {
 	const fileLine = error.location.line - 1;
 
-	const lineText = file.lines?.[fileLine] ?? '';
-
 	file.textEdits.push({
 		startLine: fileLine,
 		startCol: startOffset,
 		endLine: fileLine,
 		endCol: endOffset,
 		text: newText,
-		expectedOriginal: lineText,
 		removeIfEmptyLine: true
 	});
 }

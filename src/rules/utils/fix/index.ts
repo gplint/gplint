@@ -2,6 +2,7 @@ import fs from 'node:fs';
 
 import {ErrorData, FileData, GherkinData, Rule, RuleSubConfig} from '../../../types.js';
 import {readAndParseFile} from '../../../linter.js';
+import * as logger from '../../../logger.js';
 
 export interface Edit {
 	// 0-based coordinates
@@ -28,10 +29,17 @@ export async function fixRuleErrors(gherkinData: GherkinData, rule: Rule, ruleCo
 		rule.fix?.(e, gherkinData.file, ruleConfig);
 	});
 	if (gherkinData.file.textEdits?.length > 0) {
-		const { lines: newLines, applied } = applySafeEdits(gherkinData.file);
+		const { lines: newLines, applied, ignored } = applySafeEdits(gherkinData.file);
 		if (applied.length > 0) {
 			gherkinData.file.lines = newLines;
 			fs.writeFileSync(gherkinData.file.relativePath, newLines.join(gherkinData.file.EOL));
+		}
+
+		if (ignored.length > 0) {
+			logger.warn(`Warning: Some edits were ignored when fixing ${gherkinData.file.relativePath}:`);
+			ignored.forEach(ig => {
+				logger.warn(`- Edit from (${ig.edit.startLine + 1},${ig.edit.startCol + 1}) to (${ig.edit.endLine + 1},${ig.edit.endCol + 1}) was ignored: ${ig.reason}`);
+			});
 		}
 	}
 
@@ -103,7 +111,7 @@ export function applySafeEdits(file: FileData): ApplyResult {
 		if (n.expectedOriginal != null) {
 			const actual = original.slice(n.startOffset, n.endOffset);
 			if (actual !== n.expectedOriginal) {
-				ignored.push({ edit: n, reason: 'expectedOriginal mismatch' });
+				ignored.push({ edit: n, reason: `expectedOriginal mismatch.\n\tExpected: "${n.expectedOriginal}"\n\tCurrent: "${actual}"` });
 				continue;
 			}
 		}

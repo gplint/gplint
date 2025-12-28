@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 
-import {assert} from 'chai';
+import {expect} from 'chai';
 import _ from 'lodash';
 import sinon from 'sinon';
 import * as linter from '../../src/linter.js';
@@ -31,7 +31,7 @@ export function createRuleTest(rule: Rule, messageTemplate: string): RunTestFunc
 
 		const errors = rule.run({ feature, pickles, file }, configuration);
 
-		assert.sameDeepMembers(rule.buildRuleErrors ? errors.map(e => rule.buildRuleErrors(e as ErrorData)) : errors, expectedErrors);
+		expect(rule.buildRuleErrors ? errors.map(e => rule.buildRuleErrors(e as ErrorData)) : errors).to.have.deep.members(expectedErrors);
 	};
 }
 
@@ -43,8 +43,13 @@ export function createRuleFixTest(rule: Rule) {
 
 		await fixRuleErrors(gherkinData, rule, ruleConfig, errors as ErrorData[]);
 
-		const matcher = expected instanceof RegExp ? sinon.match(expected) : stringEOLNormalize(expected);
+		const callArgs = (fs.writeFileSync as sinon.SinonStubbedMember<typeof fs.writeFileSync>).getCall(0).args;
+		expect(callArgs[0]).to.equal(file.relativePath);
 
-		(fs.writeFileSync as sinon.SinonStubbedMember<typeof fs.writeFileSync>).calledWith(file.relativePath, matcher);
+		if (expected instanceof RegExp) {
+			expect(callArgs[1]).to.match(expected);
+		} else {
+			expect(callArgs[1]).to.equal(stringEOLNormalize(expected));
+		}
 	};
 }

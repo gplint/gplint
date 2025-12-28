@@ -16,57 +16,63 @@ describe('No Duplicate Tags Rule', function() {
 				column: 13,
 			},
 			{
+				messageElements: { tags: '@featuretag' },
+				line: 2,
+				column: 1,
+			},
+			{
 				messageElements: { tags: '@scenariotag' },
-				line: 7,
+				line: 8,
 				column: 16,
 			},
 			{
 				messageElements: { tags: '@scenariotag' },
-				line: 7,
+				line: 8,
 				column: 41,
 			},
 			{
 				messageElements: { tags: '@scenariooutlinetag' },
-				line: 11,
+				line: 12,
 				column: 23,
 			},
 			{
 				messageElements: { tags: '@scenariooutlinetag' },
-				line: 13,
+				line: 14,
 				column: 3,
 			},
 			{
 				messageElements: { tags: '@examplestag' },
-				line: 17,
+				line: 18,
 				column: 18,
 			},
 			{
 				messageElements: { tags: '@examplestag' },
-				line: 19,
+				line: 20,
 				column: 5,
 			},
 			{
 				messageElements: { tags: '@ruletag' },
-				line: 24,
+				line: 25,
 				column: 12,
 			},
 			{
 				messageElements: { tags: '@scenariotag' },
-				line: 27,
+				line: 28,
 				column: 16,
 			},
 			{
 				messageElements: { tags: '@scenariotag' },
-				line: 27,
+				line: 28,
 				column: 41,
 			},
 		]);
 	});
 
-	it('detects errors for features, scenarios, and scenario outlines and auto-fix', function() {
-		return runFixTest('no-duplicate-tags/Violations.feature', {},
-			// language=gherkin
-			`@featuretag @anothertag
+	describe('Auto-fix', function() {
+		it('detects errors for features, scenarios, and scenario outlines and auto-fix', function() {
+			return runFixTest('no-duplicate-tags/Violations.feature', {},
+				// language=gherkin
+				`@featuretag @anothertag
 Feature: Feature with multiple duplicate tags
 
   Background:
@@ -94,5 +100,6 @@ Feature: Feature with multiple duplicate tags
   Scenario: This is a Scenario without related tags
     Then this is a then step
 `);
+		});
 	});
 });

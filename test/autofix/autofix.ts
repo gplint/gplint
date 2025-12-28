@@ -86,7 +86,7 @@ describe('Autofix', function() {
 				expect(result.lines).to.be.deep.equal(['Edit1', 'line2', 'line3']);
 				expect(result.applied.length).to.be.equal(1);
 				expect(result.ignored.length).to.be.equal(1);
-				expect(result.ignored[0].reason).to.be.equal('expectedOriginal mismatch');
+				expect(result.ignored[0].reason).to.match(/^expectedOriginal mismatch/);
 			});
 
 			it('removes empty lines marked as deletable', () => {
