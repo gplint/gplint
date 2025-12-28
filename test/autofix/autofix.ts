@@ -53,13 +53,13 @@ describe('Autofix', function() {
 
 		expect(results.every(result => result.errors.length === 0)).to.be.true;
 
-		expect((fs.writeFileSync as sinon.SinonSpiedMember<typeof fs.writeFileSync>).calledWith(featureFile,
+		expect((fs.writeFileSync as sinon.SinonSpiedMember<typeof fs.writeFileSync>).calledWith(featureFile, stringEOLNormalize(
 			// language=gherkin
 			`Feature: auto-fixable feature
 
   Scenario: Autofixable VIOLATIONS
     Given I have a file with autofixable violations
-`)).to.be.true;
+`))).to.be.true;
 		// Call again to confirm autofix was applied, also reset spy history
 		(fs.writeFileSync as sinon.SinonSpiedMember<typeof fs.writeFileSync>).resetHistory();
 		const results2 = await linter.lintInit([featureFile], cliArgs, additionalRulesDirs);
