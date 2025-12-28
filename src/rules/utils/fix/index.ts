@@ -20,6 +20,9 @@ export interface ApplyResult {
 	ignored: { edit: Edit; reason: string }[]; // ignored edits and why
 }
 
+/**
+ * Fix rule errors by applying their fixes to the gherkin data's file.
+ */
 export async function fixRuleErrors(gherkinData: GherkinData, rule: Rule, ruleConfig: RuleSubConfig<unknown>, error: ErrorData[]) {
 	error.forEach(e => {
 		rule.fix?.(e, gherkinData.file, ruleConfig);
@@ -144,4 +147,3 @@ export function applySafeEdits(file: FileData): ApplyResult {
 
 	return { lines: finalLines, applied, ignored };
 }
-// File: src/rules/utils/safeTextEdits.ts
