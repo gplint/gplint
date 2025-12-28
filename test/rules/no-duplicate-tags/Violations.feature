@@ -1,4 +1,5 @@
 @featuretag @featuretag @anothertag
+@featuretag
 Feature: Feature with multiple duplicate tags
 
   Background:
