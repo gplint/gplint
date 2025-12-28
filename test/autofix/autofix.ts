@@ -33,17 +33,6 @@ describe('Autofix', function() {
 		}, {
 			createCwd: true
 		});
-
-		if (this.sinon == null) {
-			this.sinon = sinon.createSandbox();
-		} else {
-			this.sinon.restore();
-		}
-	});
-
-	let fsWriteFileSyncSpy: sinon.SinonSpiedMember<typeof console.error>;
-	beforeEach(function() {
-		fsWriteFileSyncSpy = this.sinon.spy(fs, 'writeFileSync');
 	});
 
 	// Use custom rule to control autofix better (and this count as a test for the custom rule with autofix logic)
@@ -64,21 +53,19 @@ describe('Autofix', function() {
 
 		expect(results.every(result => result.errors.length === 0)).to.be.true;
 
-		const writeFixedFileCall = fsWriteFileSyncSpy.withArgs(featureFile, sinon.match.string);
-
-		expect(writeFixedFileCall.args[0][1]).to.equal(stringEOLNormalize(
+		expect((fs.writeFileSync as sinon.SinonSpiedMember<typeof fs.writeFileSync>).calledWith(featureFile,
 			// language=gherkin
 			`Feature: auto-fixable feature
 
   Scenario: Autofixable VIOLATIONS
     Given I have a file with autofixable violations
-`));
+`)).to.be.true;
 		// Call again to confirm autofix was applied, also reset spy history
-		fsWriteFileSyncSpy.resetHistory();
+		(fs.writeFileSync as sinon.SinonSpiedMember<typeof fs.writeFileSync>).resetHistory();
 		const results2 = await linter.lintInit([featureFile], cliArgs, additionalRulesDirs);
-		expect(results2.every(result => result.errors.length === 0)).to.be.true;
+		expect(results2.every(r2 => r2.errors.length === 0)).to.be.true;
 
-		expect(fsWriteFileSyncSpy.neverCalledWithMatch(featureFile, sinon.match.string)).to.be.true;
+		expect((fs.writeFileSync as sinon.SinonSpiedMember<typeof fs.writeFileSync>).neverCalledWithMatch(featureFile, sinon.match.string)).to.be.true;
 	});
 
 	it('throw error when fix is enabled - with custom rule', async function() {
@@ -110,7 +97,7 @@ describe('Autofix', function() {
 			}
 		]);
 
-		expect(fsWriteFileSyncSpy.neverCalledWithMatch(featureFile, sinon.match.string)).to.be.true;
+		expect((fs.writeFileSync as sinon.SinonSpiedMember<typeof fs.writeFileSync>).neverCalledWithMatch(featureFile, sinon.match.string)).to.be.true;
 	});
 
 	it('do not call fix when there are no violations', async function() {
@@ -129,6 +116,6 @@ describe('Autofix', function() {
 		const results = await linter.lintInit([featureFile], cliArgs, additionalRulesDirs);
 		expect(results.every(result => result.errors.length === 0)).to.be.true;
 
-		expect(fsWriteFileSyncSpy.neverCalledWithMatch(featureFile, sinon.match.string)).to.be.true;
+		expect((fs.writeFileSync as sinon.SinonSpiedMember<typeof fs.writeFileSync>).neverCalledWithMatch(featureFile, sinon.match.string)).to.be.true;
 	});
 });

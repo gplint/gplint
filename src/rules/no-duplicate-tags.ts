@@ -1,15 +1,18 @@
-import _ from 'lodash';
-
-import {Documentation, GherkinData, GherkinTaggable, RuleError} from '../types.js';
-import { featureSpread } from './utils/gherkin.js';
+import {Location} from '@cucumber/messages';
+import {Documentation, ErrorData, FileData, GherkinData, GherkinTaggable, RuleError} from '../types.js';
+import {featureSpread} from './utils/gherkin.js';
 
 export const name = 'no-duplicate-tags';
 
-export function run({feature}: GherkinData): RuleError[] {
+interface NoDuplicateTagsErrorData extends ErrorData {
+	tagName: string,
+}
+
+export function run({feature}: GherkinData): NoDuplicateTagsErrorData[] {
 	if (!feature) {
 		return [];
 	}
-	const errors = [] as RuleError[];
+	const errors = [] as NoDuplicateTagsErrorData[];
 
 	verifyTags(feature, errors);
 
@@ -30,24 +33,48 @@ export function run({feature}: GherkinData): RuleError[] {
 	return errors;
 }
 
-function verifyTags(node: GherkinTaggable, errors: RuleError[]) {
-	const failedTagNames = [] as string[];
-	const uniqueTagNames = [] as string[];
-	node.tags.forEach(tag => {
-		if (!_.includes(failedTagNames, tag.name)) {
-			if (_.includes(uniqueTagNames, tag.name)) {
-				errors.push({
-					message: `Duplicate tags are not allowed: ${tag.name}`,
-					rule   : name,
-					line   : tag.location.line,
-					column : tag.location.column,
-				});
-				failedTagNames.push(tag.name);
-			} else  {
-				uniqueTagNames.push(tag.name);
-			}
-		}
+/**
+ * When removing a duplicate tag, also remove a single adjacent separator
+ * (space or tab) if present to avoid leaving extra spacing between tags.
+ */
+export function fix(error: NoDuplicateTagsErrorData, file: FileData): void {
+	const fileLine = error.location.line - 1;
+	const startCol = error.location.column - 2; // Move back to include the '@' and the space before it
+	const endCol = startCol + error.tagName.length;
+
+	file.textEdits.push({
+		startLine: fileLine,
+		startCol,
+		endLine: fileLine,
+		endCol,
+		text: '',
+		expectedOriginal: error.tagName,
+		removeIfEmptyLine: true,
 	});
+}
+
+function verifyTags(node: GherkinTaggable, errors: NoDuplicateTagsErrorData[]) {
+	node.tags.reduce<Record<string, Location>>((acc, cur) => {
+		if (acc[cur.name] == null) {
+			acc[cur.name] = cur.location;
+		} else {
+			errors.push({
+				location: cur.location,
+				tagName : cur.name,
+			});
+		}
+
+		return acc;
+	}, {});
+}
+
+export function buildRuleErrors(error: NoDuplicateTagsErrorData): RuleError {
+	return {
+		message: `Duplicate tags are not allowed: ${error.tagName}`,
+		rule   : name,
+		line   : error.location.line,
+		column : error.location.column,
+	};
 }
 
 export const documentation: Documentation = {
