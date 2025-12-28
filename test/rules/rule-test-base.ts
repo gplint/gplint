@@ -1,7 +1,12 @@
+import fs from 'node:fs';
+
 import {assert} from 'chai';
 import _ from 'lodash';
+import sinon from 'sinon';
 import * as linter from '../../src/linter.js';
 import { ErrorData, Rule, RuleSubConfig } from '../../src/types.js';
+import {fixRuleErrors} from '../../src/rules/utils/fix/index.js';
+import {stringEOLNormalize} from '../_test_utils.js';
 
 interface RuleErrorTemplate {
 	messageElements?: Record<string, string | number | (string | number)[]>
@@ -31,20 +36,15 @@ export function createRuleTest(rule: Rule, messageTemplate: string): RunTestFunc
 }
 
 export function createRuleFixTest(rule: Rule) {
-	return async function runTest(featureFile: string, configuration: RuleSubConfig<unknown>, expected: string | RegExp): Promise<void> {
-		const { feature, pickles, file } = await linter.readAndParseFile(`test/rules/${featureFile}`);
+	return async function runTest(featureFile: string, ruleConfig: RuleSubConfig<unknown>, expected: string | RegExp): Promise<void> {
+		const gherkinData = await linter.readAndParseFile(`test/rules/${featureFile}`);
+		const { feature, pickles, file } = gherkinData;
+		const errors = rule.run({ feature, pickles, file }, ruleConfig);
 
-		const errors = rule.run({ feature, pickles, file }, configuration);
+		await fixRuleErrors(gherkinData, rule, ruleConfig, errors as ErrorData[]);
 
-		errors.forEach(error => {
-			if (rule.fix) {
-				rule.fix(error as ErrorData, file, configuration);
-			}
-		});
-		if (expected instanceof RegExp) {
-			assert.match(file.lines.join(file.EOL), expected);
-		} else {
-			assert.equal(file.lines.join(file.EOL), expected);
-		}
+		const matcher = expected instanceof RegExp ? sinon.match(expected) : stringEOLNormalize(expected);
+
+		(fs.writeFileSync as sinon.SinonStubbedMember<typeof fs.writeFileSync>).calledWith(file.relativePath, matcher);
 	};
 }

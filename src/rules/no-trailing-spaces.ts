@@ -30,7 +30,22 @@ export function buildRuleErrors(error: NoTrailingSpacesErrorData): RuleError {
 }
 
 export function fix(error: NoTrailingSpacesErrorData, file: FileData): void {
-	file.lines[error.location.line - 1] = file.lines[error.location.line - 1].trimEnd();
+	const lineIndex = error.location.line - 1;
+	const line = file.lines[lineIndex];
+	const match = /[\t ]+$/.exec(line);
+
+	// Determine the range of trailing spaces and the expected length
+	const trailing = match[0];
+
+	file.textEdits.push({
+		startLine: lineIndex,
+		startCol: line.length - trailing.length,
+		endLine: lineIndex,
+		endCol: line.length,
+		text: '',
+		expectedOriginal: trailing,
+		removeIfEmptyLine: false,
+	});
 }
 
 export const documentation: Documentation = {
