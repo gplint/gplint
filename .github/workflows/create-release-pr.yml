@@ -50,7 +50,7 @@ jobs:
           git_committer_email: ${{ env.GIT_USER_EMAIL }}
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v8.0.0
+        uses: peter-evans/create-pull-request@v8.1.0
         with:
           token: ${{ secrets.PAT }}
           committer: ${{ env.GIT_USER_NAME }} <${{ env.GIT_USER_EMAIL }}>
