@@ -80,6 +80,13 @@ export async function lintInit(files: string[], args?: CliArgs, additionalRulesD
 }
 
 export async function lint(files: string[], configuration?: RulesConfig, additionalRulesDirs?: string[], autoFix?: boolean): Promise<ErrorsByFile[]> {
+	// TODO - Remove this when we drop support for Node 18, which doesn't have global crypto defined
+	if (parseInt(process.versions.node.split('.')[0]) <= 18) {
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-expect-error
+		global.crypto = (await import('crypto')).webcrypto;
+	}
+
 	const results = [] as ErrorsByFile[];
 
 	await Promise.all(files.map(async (f) => {
