@@ -63,4 +63,4 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ${{ matrix.os }}_${{ matrix.architecture }}_node${{ matrix.node-version }},unit
           report_type: test_results
-          files: ./reports/junit.xml
+          files: ./reports/xunit.xml

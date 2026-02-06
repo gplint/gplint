@@ -1,0 +1,6 @@
+{
+	"reporterEnabled": "spec, xunit",
+	"xunitReporterOptions": {
+		"output": "./reports/xunit.xml"
+	}
+}
