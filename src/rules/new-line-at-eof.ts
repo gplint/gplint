@@ -1,3 +1,4 @@
+import os from 'os';
 import _ from 'lodash';
 import * as logger from './../logger.js';
 import {Documentation, ErrorData, FileData, GherkinData, RuleError, RuleSubConfig} from '../types.js';
@@ -39,10 +40,34 @@ export function run({file}: GherkinData, configuration: RuleSubConfig<string>): 
 
 export function fix(error: NewLineAtEofErrorData, file: FileData, configuration: RuleSubConfig<string>): void {
 	if (configuration === 'yes') {
-		file.lines.push('');
+		const newLineIndex = Math.max(0, file.lines.length - 1);
+		const lastLine = file.lines[newLineIndex] ?? '';
+		const col = lastLine.length;
+
+		file.textEdits.push({
+			startLine: newLineIndex,
+			startCol: col,
+			endLine: newLineIndex,
+			endCol: col,
+			text: os.EOL,
+			removeIfEmptyLine: false,
+		});
 	} else if (configuration === 'no') {
-		while (_.last(file.lines) === '') {
-			file.lines.pop();
+		let i = file.lines.length - 1;
+		while (i >= 0 && file.lines[i] === '') i--;
+		const firstToRemove = i + 1;
+		if (firstToRemove <= file.lines.length - 1) {
+			const endIndex = file.lines.length - 1;
+			const endCol = file.lines[endIndex].length;
+
+			file.textEdits.push({
+				startLine: firstToRemove,
+				startCol: 0,
+				endLine: endIndex,
+				endCol,
+				text: '',
+				removeIfEmptyLine: true,
+			});
 		}
 	}
 }

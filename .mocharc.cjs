@@ -1,6 +1,9 @@
 const os = require('os');
 
 module.exports = {
+	require: [
+		'./test/hooks.ts'
+	],
 	diff: true,
 	extension: ['ts', 'js'],
 	package: './package.json',
