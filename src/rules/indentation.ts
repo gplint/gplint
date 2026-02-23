@@ -2,6 +2,7 @@ import _ from 'lodash';
 import * as gherkinUtils from './utils/gherkin.js';
 import { Documentation, GherkinData, ErrorData, RuleError, RuleSubConfig, FileData } from '../types.js';
 import {FeatureChild, Location, RuleChild, Step, Tag} from '@cucumber/messages';
+import {replaceNodeTextByRange} from './utils/fix/helpers.js';
 
 export const name = 'indentation';
 const defaultConfig = {
@@ -158,13 +159,12 @@ export function fix(error: IndentationErrorData, file: FileData, configuration: 
 	const mergedConfiguration = mergeConfiguration(configuration);
 
 	const lineContent = file.lines[error.location.line - 1];
-	const lineTrimmed = lineContent.trimStart();
 
 	const indentChar = mergedConfiguration.type === 'both' && [' ', '\t'].includes(lineContent[0])
 		? lineContent[0]
 		: (mergedConfiguration.type === 'both' ? mergedConfiguration.preferType : mergedConfiguration.type) === 'tab' ? '\t' : ' ';
 
-	file.lines[error.location.line - 1] = lineTrimmed.padStart(lineTrimmed.length + error.expectedIndentation, indentChar);
+	replaceNodeTextByRange(error, file, indentChar.repeat(error.expectedIndentation), 0, error.location.column - 1);
 }
 
 export const documentation: Documentation = {

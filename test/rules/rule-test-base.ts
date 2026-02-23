@@ -1,7 +1,12 @@
-import {assert} from 'chai';
+import fs from 'node:fs';
+
+import {expect} from 'chai';
 import _ from 'lodash';
+import sinon from 'sinon';
 import * as linter from '../../src/linter.js';
 import { ErrorData, Rule, RuleSubConfig } from '../../src/types.js';
+import {fixRuleErrors} from '../../src/rules/utils/fix/index.js';
+import {stringEOLNormalize} from '../_test_utils.js';
 
 interface RuleErrorTemplate {
 	messageElements?: Record<string, string | number | (string | number)[]>
@@ -26,25 +31,25 @@ export function createRuleTest(rule: Rule, messageTemplate: string): RunTestFunc
 
 		const errors = rule.run({ feature, pickles, file }, configuration);
 
-		assert.sameDeepMembers(rule.buildRuleErrors ? errors.map(e => rule.buildRuleErrors(e as ErrorData)) : errors, expectedErrors);
+		expect(rule.buildRuleErrors ? errors.map(e => rule.buildRuleErrors(e as ErrorData)) : errors).to.have.deep.members(expectedErrors);
 	};
 }
 
 export function createRuleFixTest(rule: Rule) {
-	return async function runTest(featureFile: string, configuration: RuleSubConfig<unknown>, expected: string | RegExp): Promise<void> {
-		const { feature, pickles, file } = await linter.readAndParseFile(`test/rules/${featureFile}`);
+	return async function runTest(featureFile: string, ruleConfig: RuleSubConfig<unknown>, expected: string | RegExp): Promise<void> {
+		const gherkinData = await linter.readAndParseFile(`test/rules/${featureFile}`);
+		const { feature, pickles, file } = gherkinData;
+		const errors = rule.run({ feature, pickles, file }, ruleConfig);
 
-		const errors = rule.run({ feature, pickles, file }, configuration);
+		await fixRuleErrors(gherkinData, rule, ruleConfig, errors as ErrorData[]);
 
-		errors.forEach(error => {
-			if (rule.fix) {
-				rule.fix(error as ErrorData, file, configuration);
-			}
-		});
+		const callArgs = (fs.writeFileSync as sinon.SinonStubbedMember<typeof fs.writeFileSync>).getCall(0).args;
+		expect(callArgs[0]).to.equal(file.relativePath);
+
 		if (expected instanceof RegExp) {
-			assert.match(file.lines.join(file.EOL), expected);
+			expect(callArgs[1]).to.match(expected);
 		} else {
-			assert.equal(file.lines.join(file.EOL), expected);
+			expect(callArgs[1]).to.equal(stringEOLNormalize(expected));
 		}
 	};
 }
