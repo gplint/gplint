@@ -64,7 +64,7 @@
 		"yargs": "17.7.2"
 	},
 	"devDependencies": {
-		"@eslint/js": "9.39.2",
+		"@eslint/js": "10.0.1",
 		"@types/chai": "5.2.3",
 		"@types/lodash": "4.17.24",
 		"@types/mocha": "10.0.10",
@@ -76,7 +76,7 @@
 		"c8": "11.0.0",
 		"chai": "6.2.2",
 		"cross-env": "10.1.0",
-		"eslint": "9.39.2",
+		"eslint": "10.0.2",
 		"eslint-plugin-chai-friendly": "1.1.0",
 		"eslint-plugin-promise": "7.2.1",
 		"mocha": "11.7.5",
@@ -87,7 +87,7 @@
 		"sinon": "21.0.1",
 		"tsx": "4.21.0",
 		"typescript": "5.9.3",
-		"typescript-eslint": "8.54.0"
+		"typescript-eslint": "8.56.1"
 	},
 	"optionalDependencies": {
 		"ts-node": "^10.9.2",
