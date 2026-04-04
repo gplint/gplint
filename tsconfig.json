@@ -3,6 +3,7 @@
     "module": "NodeNext",
     "target": "ES2022",
     "moduleResolution": "node16",
+	"rootDir": "./src",
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
