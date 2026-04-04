@@ -71,14 +71,14 @@ describe('Configuration parser', function() {
 		it('a good configuration file is used', async function() {
 			const configFilePath = 'test/config-parser/good_config.gplintrc';
 			const parsedConfig = await configParser.getConfiguration(configFilePath);
-			sinon.assert.neverCalledWith(process.exit as SinonSpy<[number], never>, 1); // eslint-disable-line @typescript-eslint/unbound-method
+			sinon.assert.neverCalledWith(process.exit as SinonSpy<[number], never>, 1);
 			expect(parsedConfig).to.deep.eq({'no-files-without-scenarios': 'off'});
 		});
 
 		it('a good configuration file is used that includes comments', async function() {
 			const configFilePath = 'test/config-parser/good_config_with_comments.gplintrc';
 			const parsedConfig = await configParser.getConfiguration(configFilePath);
-			sinon.assert.neverCalledWith(process.exit as SinonSpy<[number], never>, 1); // eslint-disable-line @typescript-eslint/unbound-method
+			sinon.assert.neverCalledWith(process.exit as SinonSpy<[number], never>, 1);
 			expect(parsedConfig).to.deep.eq({'no-files-without-scenarios': 'off'});
 		});
 
@@ -88,7 +88,7 @@ describe('Configuration parser', function() {
 			});
 
 			await configParser.getConfiguration();
-			sinon.assert.neverCalledWith(process.exit as SinonSpy<[number], never>, 1); // eslint-disable-line @typescript-eslint/unbound-method
+			sinon.assert.neverCalledWith(process.exit as SinonSpy<[number], never>, 1);
 		});
 	});
 });

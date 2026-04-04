@@ -2,7 +2,6 @@ import * as rules from '../../../src/rules.js';
 import * as linter from '../../../src/linter.js';
 import { Rules, RulesConfig } from '../../../src/types.js';
 import assert from 'assert';
-import { Suite } from 'mocha';
 
 // Test cases for incomplete feature files that have broken over time across multiple rules
 describe('Malformed features do not break the linter', function() {
@@ -36,7 +35,7 @@ describe('Malformed features do not break the linter', function() {
 						return testRule('EmptyExamples.feature', rule);
 					}),
 				])
-			.forEach(suite.addTest.bind(suite) as typeof Suite.prototype.addTest);
+			.forEach(suite.addTest.bind(suite));
 	});
 });
 

@@ -11,7 +11,7 @@ export function run(gherkinData: GherkinData, configuration: RuleSubConfig<typeo
 		configuration,
 		{
 			rule: name,
-			caseMethod: String.prototype.toLowerCase, // eslint-disable-line @typescript-eslint/unbound-method
+			caseMethod: String.prototype.toLowerCase,
 			errorMsg: 'with all lowercase are not allowed',
 		}
 	);

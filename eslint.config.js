@@ -9,7 +9,11 @@ export default tseslint.config(
 	...tseslint.configs.stylisticTypeChecked,
 	pluginPromise.configs['flat/recommended'],
 	{
-		files: ['**/*.js'],
+		files: [
+			'**/*.js',
+			'**/*.ts',
+		],
+		ignores: ['**/*.config.js'],
 		...tseslint.configs.disableTypeChecked,
 	},
 	{
@@ -90,9 +94,11 @@ export default tseslint.config(
 			'@typescript-eslint/no-confusing-void-expression': ['error', {
 				ignoreArrowShorthand: true
 			}],
-			'@typescript-eslint/prefer-nullish-coalescing': 'off', // requires strictNullChecks
-			'@typescript-eslint/no-unnecessary-condition': 'off', // requires strictNullChecks
+
 			'@typescript-eslint/no-unnecessary-boolean-literal-compare': 'off', // requires strictNullChecks
+			'@typescript-eslint/no-unnecessary-condition': 'off', // requires strictNullChecks
+			'@typescript-eslint/no-useless-default-assignment': 'off', // requires strictNullChecks
+			'@typescript-eslint/prefer-nullish-coalescing': 'off', // requires strictNullChecks
 
 			"promise/prefer-await-to-then": "error",
 			"promise/prefer-await-to-callbacks": "error",
