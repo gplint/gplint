@@ -1,0 +1,153 @@
+name: Dependency Vulnerabilities Check
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  check-vulnerabilities:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    strategy:
+      matrix:
+        gplint-version: ['latest']
+        # Add or remove versions as needed. Examples:
+        # 'latest'       - the most recent version
+        # '2.5.1'        - specific version
+        # '2.x'          - latest in 2.x range
+        # '^2.5.0'       - caret (compatible) version
+
+    steps:
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+
+      - name: Install gplint version ${{ matrix.gplint-version }} from npm
+        run: npm install gplint@${{ matrix.gplint-version }}
+
+      - name: Check for vulnerabilities
+        id: audit
+        run: |
+          npm audit --json > audit_report_${{ matrix.gplint-version }}.json 2>&1 || true
+          cat audit_report_${{ matrix.gplint-version }}.json
+
+      - name: Parse audit results
+        id: parse
+        run: |
+          VULNERABILITY_COUNT=$(cat audit_report_${{ matrix.gplint-version }}.json | jq '.metadata.vulnerabilities.total // 0')
+          echo "vulnerability_count=$VULNERABILITY_COUNT" >> $GITHUB_OUTPUT
+
+      - name: Create issue if vulnerabilities found
+        if: steps.parse.outputs.vulnerability_count != '0'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            const auditReport = JSON.parse(fs.readFileSync('audit_report_${{ matrix.gplint-version }}.json', 'utf8'));
+
+            const version = '${{ matrix.gplint-version }}';
+            const vulnerabilityCount = auditReport.metadata.vulnerabilities.total || 0;
+            const criticalCount = auditReport.metadata.vulnerabilities.critical || 0;
+            const highCount = auditReport.metadata.vulnerabilities.high || 0;
+
+            if (vulnerabilityCount === 0) {
+              console.log(`No vulnerabilities found for version ${version}`);
+              return;
+            }
+
+            // Format vulnerability details
+            let vulnDetails = '| Package | Severity | Title | Affected Range |\n|---------|----------|-------|----------------|\n';
+
+            for (const [pkgName, pkgData] of Object.entries(auditReport.vulnerabilities || {})) {
+              if (pkgData.via && Array.isArray(pkgData.via)) {
+                for (const via of pkgData.via) {
+                  // via can be a string (package reference) or an object (vulnerability details)
+                  if (typeof via === 'object' && via !== null) {
+                    const severity = via.severity || 'unknown';
+                    const title = via.title || 'Unknown vulnerability';
+                    const affectedRange = via.range || pkgData.range || 'N/A';
+                    vulnDetails += `| ${pkgName} | ${severity} | ${title} | ${affectedRange} |\n`;
+                  }
+                }
+              }
+            }
+
+            const title = `🚨 Security Alert: Vulnerabilities Found in gplint@${version}`;
+            const body = `
+            ## Dependency Vulnerability Report
+
+            **Package:** gplint@${version}
+            **Scan Date:** ${new Date().toISOString()}
+
+            ### Summary
+            - **Total Vulnerabilities:** ${vulnerabilityCount}
+            - **Critical:** ${criticalCount}
+            - **High:** ${highCount}
+
+            ### Details
+            ${vulnDetails}
+
+            ### Actions Required
+            Please review and update the affected dependencies as soon as possible.
+
+            **Run the following commands to fix:**
+            \`\`\`bash
+            npm audit fix
+            npm audit fix --force  # if needed
+            \`\`\`
+
+            For more details, check the [npm audit documentation](https://docs.npmjs.com/cli/v8/commands/npm-audit).
+            `;
+
+            // Check if an open issue already exists for this version
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: ['dependencies', 'security']
+            });
+
+            const existingIssue = issues.data.find(issue =>
+              issue.title.includes('Security Alert') &&
+              issue.title.includes(`gplint@${version}`)
+            );
+
+            if (existingIssue) {
+              // Update existing issue
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existingIssue.number,
+                body: body
+              });
+              console.log(`Updated existing issue #${existingIssue.number} for version ${version}`);
+            } else {
+              // Create new issue
+              const newIssue = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['dependencies', 'security']
+              });
+              console.log(`Created new issue #${newIssue.data.number} for version ${version}`);
+            }
+
+      - name: Report clean status
+        if: steps.parse.outputs.vulnerability_count == '0'
+        run: |
+          echo "✅ No vulnerabilities found in gplint@${{ matrix.gplint-version }}"
+
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: npm-audit-report-${{ matrix.gplint-version }}
+          path: audit_report_${{ matrix.gplint-version }}.json
+          retention-days: 30
+
