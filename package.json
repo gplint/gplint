@@ -76,7 +76,7 @@
 		"c8": "11.0.0",
 		"chai": "6.2.2",
 		"cross-env": "10.1.0",
-		"eslint": "10.3.0",
+		"eslint": "10.4.0",
 		"eslint-plugin-chai-friendly": "1.2.0",
 		"eslint-plugin-promise": "7.3.0",
 		"mocha": "11.7.5",
