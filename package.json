@@ -51,17 +51,17 @@
 	},
 	"types": "./build/index.d.ts",
 	"dependencies": {
-		"@cucumber/gherkin": "38.0.0",
-		"@cucumber/gherkin-streams": "6.0.0",
-		"@cucumber/messages": "32.0.1",
+		"@cucumber/gherkin": "40.0.0",
+		"@cucumber/gherkin-streams": "7.0.0",
+		"@cucumber/messages": "33.0.2",
 		"chalk": "5.6.2",
-		"glob": "13.0.1",
+		"glob": "13.0.6",
 		"lodash": "4.18.1",
-		"strip-ansi": "7.1.2",
+		"strip-ansi": "7.2.0",
 		"strip-json-comments": "5.0.3",
 		"text-table": "0.2.0",
 		"xml-js": "1.6.11",
-		"yargs": "17.7.2"
+		"yargs": "18.0.0"
 	},
 	"devDependencies": {
 		"@eslint/js": "10.0.1",
@@ -69,7 +69,7 @@
 		"@types/lodash": "4.17.24",
 		"@types/mocha": "10.0.10",
 		"@types/mock-fs": "4.13.4",
-		"@types/node": "25.9.3",
+		"@types/node": "26.0.0",
 		"@types/sinon": "21.0.1",
 		"@types/text-table": "0.2.5",
 		"@types/yargs": "17.0.35",
@@ -91,7 +91,7 @@
 	},
 	"optionalDependencies": {
 		"ts-node": "^10.9.2",
-		"tsx": "^4.21.0"
+		"tsx": "^4.22.4"
 	},
 	"engines": {
 		"node": ">=18.0.0"
