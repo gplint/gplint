@@ -1,5 +1,6 @@
 import { ErrorData, FileData, GherkinData, RuleError } from '../../../src/types.js';
 import { Feature } from '@cucumber/messages';
+import {replaceNodeText} from '../../../src/rules/utils/fix/helpers.js';
 
 export const name = 'autofix-rule';
 
@@ -36,6 +37,6 @@ export function buildRuleErrors(error: AutofixRuleErrorData): RuleError {
 }
 
 export function fix(error: AutofixRuleErrorData, file: FileData): void {
-	file.lines[error.location.line - 1] = `${error.node.keyword}: ${error.node.name.toLowerCase()}`;
+	replaceNodeText(error, file, `${error.node.keyword}: ${error.node.name.toLowerCase()}`);
 }
 
