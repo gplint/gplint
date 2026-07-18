@@ -1,6 +1,5 @@
 import * as ruleTestBase from '../rule-test-base.js';
 import * as rule from '../../../src/rules/indentation.js';
-import {stringEOLNormalize} from '../../_test_utils.js';
 
 const runTest = ruleTestBase.createRuleTest(rule, 'Wrong indentation for "<%= element %>", expected indentation level of <%= expected %>, but got <%= actual %>');
 const runFixTest = ruleTestBase.createRuleFixTest(rule);
@@ -344,7 +343,7 @@ describe('Indentation rule', function() {
 
 	describe('autofix', function() {
 		it('should fix wrong spaces indentation', function() {
-			return runFixTest('indentation/WrongIndentationSpaces.feature', {}, stringEOLNormalize(
+			return runFixTest('indentation/WrongIndentationSpaces.feature', {},
 				// language=gherkin
 				`@featureTag1 @featureTag2
 Feature: Test for indentation - spaces
@@ -372,7 +371,7 @@ Feature: Test for indentation - spaces
     @scenarioTag4
     Scenario: This is a Scenario a rule for indentation - spaces
       Then I should see an indentation error
-`));
+`);
 		});
 
 		it('should fix wrong tabs indentation', function() {
@@ -392,9 +391,8 @@ Feature: Test for indentation - spaces
 					but: 2,
 					preferType: 'tab'
 				},
-				stringEOLNormalize(
 				// language=gherkin
-					`@featureTag1 @featureTag2
+				`@featureTag1 @featureTag2
 Feature: Test for indentation - tabs
 
 	Background:
@@ -420,7 +418,7 @@ Feature: Test for indentation - tabs
 		@scenarioTag4
 		Scenario: This is a Scenario a rule for indentation - spaces
 			Then I should see an indentation error
-`));
+`);
 		});
 
 		it('should fix to force using space as indentation character', function() {
@@ -428,9 +426,8 @@ Feature: Test for indentation - tabs
 				{
 					type: 'space',
 				},
-				stringEOLNormalize(
 				// language=gherkin
-					`@featureTagWithTab
+				`@featureTagWithTab
 Feature: Test for indentation - mixed
 
   @scenarioTagWithSpace
@@ -442,7 +439,7 @@ Feature: Test for indentation - mixed
   Scenario: This is a Scenario for indentation - tabs
     Given this step is indented with tabs
     And this step is not indented
-`));
+`);
 		});
 
 		it('should fix to force using tab as indentation character', function() {
@@ -462,9 +459,8 @@ Feature: Test for indentation - mixed
 					but: 2,
 					type: 'tab'
 				},
-				stringEOLNormalize(
 				// language=gherkin
-					`@featureTagWithTab
+				`@featureTagWithTab
 Feature: Test for indentation - mixed
 
 	@scenarioTagWithSpace
@@ -476,7 +472,7 @@ Feature: Test for indentation - mixed
 	Scenario: This is a Scenario for indentation - tabs
 		Given this step is indented with tabs
 		And this step is not indented
-`));
+`);
 		});
 	});
 });

@@ -1,4 +1,3 @@
-import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 
@@ -18,7 +17,7 @@ import {
 	RuleSubConfig,
 } from './types.js';
 import { RuleErrors } from './errors.js';
-import { readAndParseFile } from './linter.js';
+import { fixRuleErrors } from './rules/utils/fix/index.js';
 
 const LEVELS = [
 	'off',
@@ -105,16 +104,7 @@ export async function runAllEnabledRules(
 
 			if (error.length > 0) {
 				if (autoFix && rule.fix) {
-					error.forEach(e => {
-						rule.fix(e as ErrorData, gherkinData.file, ruleConfig);
-					});
-					fs.writeFileSync(gherkinData.file.relativePath, gherkinData.file.lines.join(gherkinData.file.EOL));
-
-					const regeneratedGherkinData = await readAndParseFile(gherkinData.file.relativePath);
-
-					gherkinData.feature = regeneratedGherkinData.feature;
-					gherkinData.pickles = regeneratedGherkinData.pickles;
-					gherkinData.file = regeneratedGherkinData.file;
+					await fixRuleErrors(gherkinData, rule, ruleConfig, error as ErrorData[]);
 				} else {
 					errors = errors.concat(error.map(e => ({
 						level: ruleLevel,
