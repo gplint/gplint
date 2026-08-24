@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import {GherkinData, RuleSubConfig, RuleError, Documentation} from '../types.js';
-import {TableCell, TableRow} from '@cucumber/messages';
+import {GherkinData, RuleSubConfig, RuleError, ErrorData, Documentation} from '../types.js';
+import {TableRow} from '@cucumber/messages';
 import { featureSpread } from './utils/gherkin.js';
 
 const TABLE_SEPARATOR = '|';
@@ -12,7 +12,11 @@ export const availableConfigs = {
 	steps: true,
 };
 
-export function run({feature, file}: GherkinData, configuration: RuleSubConfig<typeof availableConfigs>): RuleError[] {
+interface TableAlignErrorData extends ErrorData {
+	value: string
+}
+
+export function run({feature, file}: GherkinData, configuration: RuleSubConfig<typeof availableConfigs>): TableAlignErrorData[] {
 	function _checkRows(rows: readonly TableRow[]) {
 		// row could be null on missing tables
 		if (rows.length === 0 || rows.some(row => row == null)) {
@@ -35,10 +39,10 @@ export function run({feature, file}: GherkinData, configuration: RuleSubConfig<t
 				const expectedCellValue = ` ${cellValue.padEnd(columnsMaxLength[cellIndex])} `;
 
 				if (expectedCellValue !== realCells[cellIndex]) {
-					errors.push(createError({
+					errors.push({
 						location: cell.location,
-						value: cellValue
-					}));
+						value: cellValue,
+					});
 				}
 			});
 		});
@@ -49,7 +53,7 @@ export function run({feature, file}: GherkinData, configuration: RuleSubConfig<t
 	}
 	const mergedConfig = _.merge({}, availableConfigs, configuration);
 
-	const errors = [] as RuleError[];
+	const errors = [] as TableAlignErrorData[];
 
 	const {children} = featureSpread(feature);
 
@@ -72,12 +76,12 @@ export function run({feature, file}: GherkinData, configuration: RuleSubConfig<t
 	return errors;
 }
 
-function createError(cell: TableCell): RuleError {
+export function buildRuleErrors(error: TableAlignErrorData): RuleError {
 	return {
-		message: `Cell with value "${cell.value}" is not aligned`,
+		message: `Cell with value "${error.value}" is not aligned`,
 		rule: name,
-		line: cell.location.line,
-		column: cell.location.column,
+		line: error.location.line,
+		column: error.location.column,
 	};
 }
 
