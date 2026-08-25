@@ -10,6 +10,7 @@ import {
 	Step,
 	Background,
 } from '@cucumber/messages';
+import {Edit} from './rules/utils/fix/index.js';
 
 export type Rules = Record<string, Rule>;
 
@@ -86,6 +87,7 @@ export interface FileData {
 	relativePath: string
 	lines: string[]
 	EOL: string
+	textEdits: Edit[]
 }
 
 export type GherkinTaggable = Feature | CucumberRule | Scenario | Examples;

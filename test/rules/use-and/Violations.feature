@@ -4,8 +4,8 @@ Background:
   Given step4
   Given step5
   And step6
-  When step7 
-  When step8 
+  When step7
+  When step8
   And step9
   Then step10
   Then step11
@@ -16,7 +16,7 @@ Scenario: This is a Scenario
   Given step16
   And step17
   When step18
-  When step19 
+  When step19
   And step20
   Then step21
   Then step22

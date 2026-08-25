@@ -8,6 +8,7 @@ import * as rules from './rules.js';
 import {
 	Errors,
 	ErrorsByFile,
+	FileData,
 	GherkinData,
 	GherkinError,
 	RuleError,
@@ -67,7 +68,8 @@ export async function readAndParseFile(filePath: string): Promise<GherkinData> {
 					relativePath: filePath,
 					lines: fileContent,
 					EOL: fileEOL,
-				};
+					textEdits: [],
+				} as FileData;
 				resolve({feature, pickles, file});
 			}
 		});
