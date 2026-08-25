@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import {GherkinData, RuleSubConfig, RuleError, Documentation} from '../types.js';
-import {TableCell, TableRow} from '@cucumber/messages';
+import {GherkinData, RuleSubConfig, RuleError, ErrorData, FileData, Documentation} from '../types.js';
+import {TableRow} from '@cucumber/messages';
 import { featureSpread } from './utils/gherkin.js';
 
 const TABLE_SEPARATOR = '|';
@@ -12,7 +12,12 @@ export const availableConfigs = {
 	steps: true,
 };
 
-export function run({feature, file}: GherkinData, configuration: RuleSubConfig<typeof availableConfigs>): RuleError[] {
+interface TableAlignErrorData extends ErrorData {
+	value: string,
+	expectedLine: string,
+}
+
+export function run({feature, file}: GherkinData, configuration: RuleSubConfig<typeof availableConfigs>): TableAlignErrorData[] {
 	function _checkRows(rows: readonly TableRow[]) {
 		// row could be null on missing tables
 		if (rows.length === 0 || rows.some(row => row == null)) {
@@ -27,18 +32,32 @@ export function run({feature, file}: GherkinData, configuration: RuleSubConfig<t
 		const columnsMaxLength = columns.map(column => Math.max(...column.map(cell => cell.trim().length)));
 
 		rows.forEach((row, rowIndex) => {
-			const realLine = _.trim(file.lines[row.location.line - 1].trim(), TABLE_SEPARATOR);
+			const line = file.lines[row.location.line - 1];
+			const realLine = _.trim(line.trim(), TABLE_SEPARATOR);
 			const realCells = realLine.split(TABLE_SPLITTER);
+
+			// Build the fully aligned version of this row now and attach it to each
+			// cell error, since `fix` only gets the error and can't see the table.
+			// Keep the row's original indentation — lining up indentation is the
+			// indentation rule's job. Use the cell text straight from the source
+			// line, not row.cells[].value: the parser strips the backslash from an
+			// escaped pipe (`\|` becomes `|`), which would throw off the column
+			// widths and mean fixing a table with escaped pipes never settles.
+			const indent = line.substring(0, line.length - line.trimStart().length);
+			const expectedLine = indent + TABLE_SEPARATOR + tableLines[rowIndex]
+				.map((cell, cellIndex) => ` ${cell.trim().padEnd(columnsMaxLength[cellIndex])} `)
+				.join(TABLE_SEPARATOR) + TABLE_SEPARATOR;
 
 			row.cells.forEach((cell, cellIndex) => {
 				const cellValue = tableLines[rowIndex][cellIndex].trim();
 				const expectedCellValue = ` ${cellValue.padEnd(columnsMaxLength[cellIndex])} `;
 
 				if (expectedCellValue !== realCells[cellIndex]) {
-					errors.push(createError({
+					errors.push({
 						location: cell.location,
-						value: cellValue
-					}));
+						value: cellValue,
+						expectedLine,
+					});
 				}
 			});
 		});
@@ -49,7 +68,7 @@ export function run({feature, file}: GherkinData, configuration: RuleSubConfig<t
 	}
 	const mergedConfig = _.merge({}, availableConfigs, configuration);
 
-	const errors = [] as RuleError[];
+	const errors = [] as TableAlignErrorData[];
 
 	const {children} = featureSpread(feature);
 
@@ -72,13 +91,19 @@ export function run({feature, file}: GherkinData, configuration: RuleSubConfig<t
 	return errors;
 }
 
-function createError(cell: TableCell): RuleError {
+export function buildRuleErrors(error: TableAlignErrorData): RuleError {
 	return {
-		message: `Cell with value "${cell.value}" is not aligned`,
+		message: `Cell with value "${error.value}" is not aligned`,
 		rule: name,
-		line: cell.location.line,
-		column: cell.location.column,
+		line: error.location.line,
+		column: error.location.column,
 	};
+}
+
+export function fix(error: TableAlignErrorData, file: FileData): void {
+	// Same-row cell errors all carry the identical expectedLine, so rewriting
+	// the line once per error is idempotent.
+	file.lines[error.location.line - 1] = error.expectedLine;
 }
 
 function _splitTableRow(line: string): string[] {
