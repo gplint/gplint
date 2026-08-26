@@ -1,14 +1,49 @@
-import fs from 'fs';
+import fs from 'node:fs';
+import _ from 'lodash';
 import stripJsonComments from 'strip-json-comments';
 import * as verifyConfig from './config-verifier.js';
 import * as logger from './logger.js';
-import {RulesConfig} from './types.js';
+import {RuleConfigArray, RulesConfig} from './types.js';
+import {CliArgs} from './cli/commands/main.js';
+
 export const defaultConfigFileName = '.gplintrc';
 
-export async function getConfiguration(configPath: string = defaultConfigFileName, additionalRulesDirs?: string[]): Promise<RulesConfig> {
+export async function getConfiguration(args?: CliArgs, additionalRulesDirs?: string[]): Promise<RulesConfig> {
+	const configPath = args?.config || defaultConfigFileName;
+
 	try {
 		const config = JSON.parse(stripJsonComments(await fs.promises.readFile(configPath, {encoding: 'utf8'}))) as RulesConfig;
-		const errors = await verifyConfig.verifyConfigurationFile(config, additionalRulesDirs);
+		const finalConfig = (args?.ruleOverwrite || []).reduce((acc, curr) => {
+			const [ruleName, ruleCfg] = curr.split('=');
+			let level, options;
+			if (ruleCfg.includes(',')) {
+				const separator = ruleCfg.indexOf(',');
+				level = ruleCfg.substring(0, separator);
+				options = ruleCfg.substring(separator + 1);
+			} else {
+				level = ruleCfg;
+			}
+
+			if (!acc[ruleName]) {
+				acc[ruleName] = null;
+			}
+
+			if (!Array.isArray(acc[ruleName])) {
+				acc[ruleName] = [level] as RuleConfigArray;
+			}
+
+			if (options) {
+				acc[ruleName][1] = _.merge(acc[ruleName][1], JSON.parse(options));
+			}
+
+			if (acc[ruleName].length === 1) {
+				acc[ruleName] = level;
+			}
+
+			return acc;
+		}, config);
+
+		const errors = await verifyConfig.verifyConfigurationFile(finalConfig, additionalRulesDirs);
 
 		if (errors.length > 0) {
 			logger.boldError('Error(s) in configuration file:');
@@ -18,7 +53,7 @@ export async function getConfiguration(configPath: string = defaultConfigFileNam
 			process.exit(1);
 		}
 
-		return config;
+		return finalConfig;
 	} catch (e) {
 		if ((e as NodeJS.ErrnoException).code === 'ENOENT') {
 			logger.boldError(`Could not find config file "${configPath}" in the working directory.
