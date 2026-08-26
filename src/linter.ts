@@ -75,7 +75,7 @@ export async function readAndParseFile(filePath: string): Promise<GherkinData> {
 }
 
 export async function lintInit(files: string[], args?: CliArgs, additionalRulesDirs?: string[]): Promise<ErrorsByFile[]> {
-	const configuration = await configParser.getConfiguration(args.config, additionalRulesDirs);
+	const configuration = await configParser.getConfiguration(args, additionalRulesDirs);
 	return lint(files, configuration, additionalRulesDirs, args.fix);
 }
 

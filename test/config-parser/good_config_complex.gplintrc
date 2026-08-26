@@ -1,0 +1,19 @@
+{
+	"allow-all-caps": [
+		"error",
+		{
+			"Global": false,
+			"Description": true,
+			"ExampleHeader": true,
+			"ExampleBody": true
+		}
+	],
+	"file-name": [
+		"error",
+		{
+			"style": "PascalCase"
+		}
+	],
+	"no-files-without-scenarios": "off",
+	"table-align": "off"
+}

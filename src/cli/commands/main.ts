@@ -14,6 +14,7 @@ export interface CliArgs extends CommandModule {
 	format: string
 	ignore?: string[]
 	maxWarnings: number
+	ruleOverwrite?: string[]
 	rulesdir?: string[]
 	_?: string[]
 }
