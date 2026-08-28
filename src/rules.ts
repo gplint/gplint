@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 
-import * as glob from 'glob';
+import { glob } from 'tinyglobby';
 import _ from 'lodash';
 
 import {
@@ -40,8 +40,7 @@ export async function getAllRules(additionalRulesDirs?: string[]): Promise<Rules
 	for (let rulesDir of rulesDirs) {
 		rulesDir = path.resolve(rulesDir);
 		const rulesWildcard = safePathJoin(rulesDir, '*.?(c|m)@(j|t)s'); // .js, .cjs, .mjs (and TS equivalents)
-		for (const file of glob.sync(rulesWildcard, {
-			windowsPathsNoEscape: true,
+		for (const file of await glob(rulesWildcard, {
 			ignore: safePathJoin(rulesDir, '**/*.d.?(c|m)ts')
 		})) {
 			const rule = await import(pathToFileURL(file).toString()) as Rule;

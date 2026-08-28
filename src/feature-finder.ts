@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import * as glob from 'glob';
+import { globSync } from 'tinyglobby';
 import fs from 'fs';
 import path from 'path';
 import * as logger from './logger.js';
@@ -44,7 +44,7 @@ export function getFeatureFiles(args: string[], ignoreArg?: string[]): string[] 
 			windowsPathsNoEscape: true,
 		};
 
-		files = files.concat(glob.sync(fixedPattern, globOptions));
+		files = files.concat(globSync(fixedPattern, globOptions));
 	});
 	return _.uniq(files);
 }
