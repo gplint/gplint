@@ -51,17 +51,17 @@
 	},
 	"types": "./build/index.d.ts",
 	"dependencies": {
-		"@cucumber/gherkin": "40.0.0",
-		"@cucumber/gherkin-streams": "7.0.0",
-		"@cucumber/messages": "33.0.2",
-		"chalk": "5.6.2",
+		"@cucumber/gherkin": "42.0.1",
+		"@cucumber/gherkin-streams": "7.0.1",
+		"@cucumber/messages": "34.2.1",
+		"chalk": "6.0.0",
 		"glob": "13.0.6",
 		"lodash": "4.18.1",
 		"strip-ansi": "7.2.0",
 		"strip-json-comments": "5.0.3",
 		"text-table": "0.2.0",
 		"xml-js": "1.6.11",
-		"yargs": "18.0.0"
+		"yargs": "18.1.0"
 	},
 	"devDependencies": {
 		"@eslint/js": "10.0.1",
