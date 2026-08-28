@@ -61,7 +61,7 @@
 		"strip-json-comments": "5.0.3",
 		"text-table": "0.2.0",
 		"xml-js": "1.6.11",
-		"yargs": "18.0.0"
+		"yargs": "18.1.0"
 	},
 	"devDependencies": {
 		"@eslint/js": "10.0.1",
