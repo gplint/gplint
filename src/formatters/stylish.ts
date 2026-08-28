@@ -1,6 +1,6 @@
 import os from 'os';
 import {InspectColor, styleText} from 'node:util';
-import stripAnsi from 'strip-ansi';
+import { stripVTControlCharacters } from 'node:util';
 import table from 'text-table';
 import {ErrorsByFile, RuleErrorLevel} from '../types.js';
 
@@ -68,7 +68,7 @@ export function print(results: ErrorsByFile[]): string {
 				result.errors.map(error => stylizeError(error, maxLineLength)),
 				{
 					align: ['.', 'r', 'l'],
-					stringLength: (str: string): number => stripAnsi(str).length,
+					stringLength: (str: string): number => stripVTControlCharacters(str).length,
 				}
 			);
 			output += os.EOL + os.EOL;
