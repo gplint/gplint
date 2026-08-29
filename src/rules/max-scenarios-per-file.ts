@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _merge from 'lodash.merge';
 import {GherkinData, RuleSubConfig, RuleError, Documentation} from '../types.js';
 import { featureSpread } from './utils/gherkin.js';
 
@@ -14,7 +14,7 @@ export function run({feature}: GherkinData, configuration: RuleSubConfig<typeof 
 		return [];
 	}
 	const errors = [] as RuleError[];
-	const mergedConfiguration = _.merge({}, availableConfigs, configuration);
+	const mergedConfiguration = _merge({}, availableConfigs, configuration);
 	const {maxScenarios} = mergedConfiguration;
 
 	const {children} = featureSpread(feature);

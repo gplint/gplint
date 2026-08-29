@@ -3,7 +3,8 @@ import path from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 
 import { glob } from 'tinyglobby';
-import _ from 'lodash';
+import _isNumber from 'lodash.isnumber';
+import _toNumber from 'lodash.tonumber';
 
 import {
 	ErrorData,
@@ -71,7 +72,7 @@ export function getRuleLevel(ruleConfig: RuleConfig, rule: string): ErrorLevels 
 		return 0;
 	}
 
-	let levelNum = _.isNumber(level) ? level : _.toNumber(level);
+	let levelNum = _isNumber(level) ? level : _toNumber(level);
 
 	if (isNaN(levelNum)) {
 		levelNum = LEVELS.indexOf(level as string);

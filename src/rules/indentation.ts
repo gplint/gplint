@@ -1,4 +1,8 @@
-import _ from 'lodash';
+import _forEach from 'lodash.foreach';
+import _groupBy from 'lodash.groupby';
+import _merge from 'lodash.merge';
+import _sortBy from 'lodash.sortby';
+
 import * as gherkinUtils from './utils/gherkin.js';
 import { Documentation, GherkinData, ErrorData, RuleError, RuleSubConfig, FileData } from '../types.js';
 import {FeatureChild, Location, RuleChild, Step, Tag} from '@cucumber/messages';
@@ -24,7 +28,7 @@ const defaultConfig = {
 	preferType: 'space', // 'space' | 'tab'
 };
 
-export const availableConfigs = _.merge({}, defaultConfig, {
+export const availableConfigs = _merge({}, defaultConfig, {
 	// The values here are unused by the config parsing logic.
 	'feature tag': -1,
 	'rule tag': -1,
@@ -41,7 +45,7 @@ interface IndentationErrorData extends ErrorData {
 }
 
 function mergeConfiguration(configuration: Configuration): Configuration {
-	const mergedConfiguration = _.merge({}, defaultConfig, configuration);
+	const mergedConfiguration = _merge({}, defaultConfig, configuration);
 
 	Object.entries({
 		'feature tag': mergedConfiguration.Feature,
@@ -91,8 +95,8 @@ export function run({ feature, file }: GherkinData, configuration: Configuration
 	}
 
 	function validateTags(tags: readonly Tag[], type: ConfigurationKey, modifier = 0) {
-		_(tags).groupBy('location.line').forEach(tagLocationGroup => {
-			const firstTag = _(tagLocationGroup).sortBy('location.column').head();
+		_forEach(_groupBy(tags, 'location.line'), tagLocationGroup => {
+			const firstTag = _sortBy(tagLocationGroup, 'location.column').at(0);
 			if (firstTag) {
 				validate(firstTag.location, type, modifier);
 			}

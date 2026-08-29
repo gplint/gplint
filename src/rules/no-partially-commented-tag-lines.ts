@@ -1,6 +1,7 @@
 import {Documentation, GherkinData, GherkinTaggable, RuleError, RuleSubConfig} from '../types.js';
 import { featureSpread } from './utils/gherkin.js';
-import _ from 'lodash';
+import _merge from 'lodash.merge';
+import _uniqBy from 'lodash.uniqby';
 
 export const name = 'no-partially-commented-tag-lines';
 
@@ -13,7 +14,7 @@ export function run({file, feature}: GherkinData, configuration: RuleSubConfig<t
 		return [];
 	}
 
-	const mergedConfig = _.merge({}, availableConfigs, configuration);
+	const mergedConfig = _merge({}, availableConfigs, configuration);
 
 	function checkTags(node: GherkinTaggable) {
 		if (mergedConfig.allowSeparated) {
@@ -28,7 +29,7 @@ export function run({file, feature}: GherkinData, configuration: RuleSubConfig<t
 				}
 			});
 		} else {
-			_.uniqBy(node.tags.map(tag => tag), 'location.line').forEach(tag => {
+			_uniqBy(node.tags.map(tag => tag), 'location.line').forEach(tag => {
 				if (file.lines[tag.location.line - 1].includes('#')) {
 					errors.push({
 						message: 'Partially commented tag lines not allowed',

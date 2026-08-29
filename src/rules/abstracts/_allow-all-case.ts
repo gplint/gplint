@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _merge from 'lodash.merge';
 import {GherkinData, RuleError, RuleSubConfig} from '../../types.js';
 import {Background, Examples, Feature, FeatureChild, Location, Rule, Scenario} from '@cucumber/messages';
 
@@ -45,7 +45,7 @@ export function run(
 		return [];
 	}
 
-	const mergedConfig = _.merge({}, availableConfigs, configuration);
+	const mergedConfig = _merge({}, availableConfigs, configuration);
 
 	const errors = [] as RuleError[];
 

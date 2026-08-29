@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { globSync } from 'tinyglobby';
 import fs from 'fs';
 import path from 'path';
@@ -46,7 +45,7 @@ export function getFeatureFiles(args: string[], ignoreArg?: string[]): string[] 
 
 		files = files.concat(globSync(fixedPattern, globOptions));
 	});
-	return _.uniq(files);
+	return [...new Set(files)];
 }
 
 export function getIgnorePatterns(ignoreArg?: string[]): string | string[] {

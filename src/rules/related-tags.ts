@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _isRegExp from 'lodash.isregexp';
 import {Documentation, GherkinData, GherkinTaggable, RuleError, RuleSubConfig} from '../types.js';
 import {Tag} from '@cucumber/messages';
 import { featureSpread } from './utils/gherkin.js';
@@ -72,7 +72,7 @@ function checkTags(node: GherkinTaggable, tags: RelatedTags, errors: RuleError[]
 }
 
 function checkRelatedTag(relatedTag: string | RegExp, nodeTags: string[]) {
-	return _.isRegExp(relatedTag)
+	return _isRegExp(relatedTag)
 		? nodeTags.some(t => relatedTag.test(t))
 		: nodeTags.includes(relatedTag);
 }

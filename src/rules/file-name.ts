@@ -1,5 +1,13 @@
 import path from 'path';
-import _ from 'lodash';
+
+import _camelCase from 'lodash.camelcase';
+import _kebabCase from 'lodash.kebabcase';
+import _lowerFirst from 'lodash.lowerfirst';
+import _merge from 'lodash.merge';
+import _snakeCase from 'lodash.snakecase';
+import _startCase from 'lodash.startcase';
+import _upperFirst from 'lodash.upperfirst';
+import _words from 'lodash.words';
 
 import {GherkinData, RuleSubConfig, RuleError, Documentation} from '../types.js';
 
@@ -10,23 +18,23 @@ export const availableConfigs = {
 };
 
 const checkers = {
-	'PascalCase': filename => _.startCase(filename).replace(/ /g, ''),
-	'Title Case': filename => _.startCase(filename),
+	'PascalCase': filename => _startCase(filename).replace(/ /g, ''),
+	'Title Case': filename => _startCase(filename),
 	'camelCase': (filename, allowAcronyms) => {
 		if (allowAcronyms) {
-			const words = _.words(filename);
+			const words = _words(filename);
 			const firstWord = words.shift();
-			return (/^[A-Z]+$/.test(firstWord) ? firstWord : _.lowerFirst(firstWord))
-				+ words.map(word => _.upperFirst(word)).join('');
+			return (/^[A-Z]+$/.test(firstWord) ? firstWord : _lowerFirst(firstWord))
+				+ words.map(word => _upperFirst(word)).join('');
 		}
-		return _.camelCase(filename);
+		return _camelCase(filename);
 	},
-	'kebab-case': filename => _.kebabCase(filename),
-	'snake_case': filename => _.snakeCase(filename)
+	'kebab-case': filename => _kebabCase(filename),
+	'snake_case': filename => _snakeCase(filename)
 } as Record<string, (filename: string, allowAcronyms?: boolean) => string>;
 
 export function run({file}: GherkinData, configuration: RuleSubConfig<typeof availableConfigs>): RuleError[] {
-	const {style, allowAcronyms} = _.merge(availableConfigs, configuration);
+	const {style, allowAcronyms} = _merge(availableConfigs, configuration);
 	const filename = path.basename(file.relativePath, '.feature');
 	if (!Object.hasOwn(checkers, style)) {
 		throw new Error(`Style "${style}" not supported for file-name rule`);

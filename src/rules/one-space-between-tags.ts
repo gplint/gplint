@@ -1,4 +1,6 @@
-import _ from 'lodash';
+import _range from 'lodash.range';
+import _sortBy from 'lodash.sortby';
+import _groupBy from 'lodash.groupby';
 import {Documentation, GherkinData, GherkinTaggable, RuleError} from '../types.js';
 import { featureSpread } from './utils/gherkin.js';
 
@@ -32,11 +34,9 @@ export function run({feature}: GherkinData): RuleError[] {
 }
 
 function testTags(node: GherkinTaggable, errors: RuleError[]) {
-	_(node.tags)
-		.groupBy('location.line')
-		.sortBy('location.column')
+	_sortBy(_groupBy(node.tags, 'location.line'), 'location.column')
 		.forEach(tags => {
-			_.range(tags.length - 1)
+			_range(tags.length - 1)
 				.map(i => {
 					if ((tags[i].location.column ?? 0) + tags[i].name.length < (tags[i + 1].location.column ?? 0) - 1) {
 						errors.push({
