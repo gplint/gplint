@@ -127,11 +127,11 @@
 		"sinon": "22.1.0",
 		"tsx": "4.21.0",
 		"typescript": "6.0.3",
-		"typescript-eslint": "8.65.0"
+		"typescript-eslint": "8.68.0"
 	},
 	"optionalDependencies": {
 		"ts-node": "^10.9.2",
-		"tsx": "^4.22.4"
+		"tsx": "^4.21.0"
 	},
 	"engines": {
 		"node": ">=18.0.0"
