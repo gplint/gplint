@@ -2,8 +2,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 
-import * as glob from 'glob';
-import _ from 'lodash';
+import {glob} from 'tinyglobby';
+
+import _isNumber from 'lodash.isnumber';
+import _toNumber from 'lodash.tonumber';
 
 import {
 	ErrorData,
@@ -19,6 +21,7 @@ import {
 } from './types.js';
 import { RuleErrors } from './errors.js';
 import { readAndParseFile } from './linter.js';
+import {safePathJoin} from './utils.js';
 
 const LEVELS = [
 	'off',
@@ -40,8 +43,7 @@ export async function getAllRules(additionalRulesDirs?: string[]): Promise<Rules
 	for (let rulesDir of rulesDirs) {
 		rulesDir = path.resolve(rulesDir);
 		const rulesWildcard = safePathJoin(rulesDir, '*.?(c|m)@(j|t)s'); // .js, .cjs, .mjs (and TS equivalents)
-		for (const file of glob.sync(rulesWildcard, {
-			windowsPathsNoEscape: true,
+		for (const file of await glob(rulesWildcard, {
 			ignore: safePathJoin(rulesDir, '**/*.d.?(c|m)ts')
 		})) {
 			const rule = await import(pathToFileURL(file).toString()) as Rule;
@@ -49,12 +51,6 @@ export async function getAllRules(additionalRulesDirs?: string[]): Promise<Rules
 		}
 	}
 	return rules;
-}
-
-function safePathJoin(...paths: string[]) {
-	const fullPath = path.join(...paths);
-
-	return path.sep === path.posix.sep ? fullPath : fullPath.replaceAll(path.sep, path.posix.sep);
 }
 
 export async function getRule(rule: string, additionalRulesDirs?: string[]): Promise<Rule | undefined> {
@@ -72,7 +68,7 @@ export function getRuleLevel(ruleConfig: RuleConfig, rule: string): ErrorLevels 
 		return 0;
 	}
 
-	let levelNum = _.isNumber(level) ? level : _.toNumber(level);
+	let levelNum = _isNumber(level) ? level : _toNumber(level);
 
 	if (isNaN(levelNum)) {
 		levelNum = LEVELS.indexOf(level as string);

@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import _castArray from 'lodash.castarray';
+import _merge from 'lodash.merge';
 import {Feature, Pickle, Rule as CucumberRule} from '@cucumber/messages';
 import * as gherkinUtils from './utils/gherkin.js';
 import {
@@ -24,7 +25,7 @@ export const availableConfigs = {
 };
 
 function checkTagNotPresent(requiredTag: string | string[], {tags}: GherkinTaggable | Pickle) {
-	return _.castArray(requiredTag).every(rt =>
+	return _castArray(requiredTag).every(rt =>
 		!tags.some(tag => {
 			const regexpMatch = /^@?\/(?<exp>.*)\/$/.exec(rt);
 
@@ -40,7 +41,7 @@ export function run({
 		return [];
 	}
 
-	const mergedConfig = _.merge({}, availableConfigs, configuration);
+	const mergedConfig = _merge({}, availableConfigs, configuration);
 
 	const errors = [] as RuleError[];
 

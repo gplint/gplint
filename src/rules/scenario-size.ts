@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _isEmpty from 'lodash.isempty';
 import * as gherkinUtils from './utils/gherkin.js';
 import {featureSpread} from './utils/gherkin.js';
 
@@ -17,7 +17,7 @@ export function run({feature}: GherkinData, configuration: RuleSubConfig<typeof 
 		return [];
 	}
 
-	if (_.isEmpty(configuration)) {
+	if (_isEmpty(configuration)) {
 		configuration = availableConfigs;
 	}
 

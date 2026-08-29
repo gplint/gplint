@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _intersectionBy from 'lodash.intersectionby';
 import { Feature, Rule } from '@cucumber/messages';
 import * as gherkinUtils from './utils/gherkin.js';
 import {Documentation, GherkinData, GherkinTaggable, RuleError} from '../types.js';
@@ -38,7 +38,7 @@ function checkSuperfluousContainer(container: Feature | Rule, lang: string, erro
 
 function checkTags(child: GherkinTaggable, parents: GherkinTaggable[], language: string, errors: RuleError[]) {
 	for (const parent of parents) {
-		const superfluousTags = _.intersectionBy(child.tags, parent.tags, 'name');
+		const superfluousTags = _intersectionBy(child.tags, parent.tags, 'name');
 		const childType = gherkinUtils.getNodeType(child, language);
 		const parentType = gherkinUtils.getNodeType(parent, language);
 

@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import * as gherkinUtils from './utils/gherkin.js';
 import {Documentation, GherkinData, RuleError} from '../types.js';
 import { featureSpread } from './utils/gherkin.js';
@@ -15,7 +14,7 @@ export function run({feature}: GherkinData): RuleError[] {
 		if (child.scenario) {
 			const {scenario} = child;
 			const nodeType = gherkinUtils.getNodeType(scenario, feature.language);
-			if (nodeType === 'Scenario Outline' &&  (!_.find(scenario.examples, 'tableBody')?.tableBody.length)) {
+			if (nodeType === 'Scenario Outline' && (!scenario.examples.find(ex => ex.tableBody)?.tableBody.length)) {
 				errors.push({
 					message: 'Scenario Outline does not have any Examples',
 					rule   : name,

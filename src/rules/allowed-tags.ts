@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _merge from 'lodash.merge';
 import { Examples, Feature, Rule, Scenario, Tag } from '@cucumber/messages';
 import {Documentation, GherkinData, RuleError, RuleSubConfig} from '../types.js';
 import { featureSpread } from './utils/gherkin.js';
@@ -15,7 +15,7 @@ export function run({feature}: GherkinData, configuration: RuleSubConfig<typeof 
 		return [];
 	}
 
-	const mergedConfiguration = _.merge({}, availableConfigs, configuration);
+	const mergedConfiguration = _merge({}, availableConfigs, configuration);
 
 	const errors = [] as RuleError[];
 	const allowedTags = mergedConfiguration.tags;
@@ -55,7 +55,7 @@ function checkTags(node: Feature | Rule | Scenario | Examples, allowedTags: stri
 }
 
 function isAllowed(tag: Tag, allowedTags: string[], allowedPatterns:RegExp[]) {
-	return _.includes(allowedTags, tag.name)
+	return allowedTags.includes(tag.name)
 		|| allowedPatterns.some((pattern) => pattern.test(tag.name));
 }
 

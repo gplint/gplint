@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _merge from 'lodash.merge';
 import {Documentation, GherkinData, RuleError, RuleSubConfig} from '../types.js';
 import {Background, Location, Scenario} from '@cucumber/messages';
 import { featureSpread } from './utils/gherkin.js';
@@ -37,7 +37,7 @@ export function run({feature}: GherkinData, configuration: Configuration): RuleE
 	}
 
 	const errors = [] as RuleError[];
-	const mergedConfiguration = _.merge(availableConfigs, configuration);
+	const mergedConfiguration = _merge(availableConfigs, configuration);
 
 	// Check Feature name length
 	test(feature.name, feature.location, mergedConfiguration, 'Feature', errors);

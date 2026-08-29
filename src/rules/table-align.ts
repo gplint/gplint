@@ -1,4 +1,6 @@
-import _ from 'lodash';
+import _merge from 'lodash.merge';
+import _range from 'lodash.range';
+import _trim from 'lodash.trim';
 import {GherkinData, RuleSubConfig, RuleError, ErrorData, FileData, Documentation} from '../types.js';
 import {TableRow} from '@cucumber/messages';
 import { featureSpread } from './utils/gherkin.js';
@@ -27,13 +29,13 @@ export function run({feature, file}: GherkinData, configuration: RuleSubConfig<t
 		const tableLines = rows.map(row => _splitTableRow(file.lines[row.location.line - 1]));
 
 		const columnsCount = tableLines[0].length;
-		const columns = _.range(columnsCount).map(i => tableLines.map(row => row[i]));
+		const columns = _range(columnsCount).map(i => tableLines.map(row => row[i]));
 
 		const columnsMaxLength = columns.map(column => Math.max(...column.map(cell => cell.trim().length)));
 
 		rows.forEach((row, rowIndex) => {
 			const line = file.lines[row.location.line - 1];
-			const realLine = _.trim(line.trim(), TABLE_SEPARATOR);
+			const realLine = _trim(line.trim(), TABLE_SEPARATOR);
 			const realCells = realLine.split(TABLE_SPLITTER);
 
 			// Build the fully aligned version of this row now and attach it to each
@@ -66,7 +68,7 @@ export function run({feature, file}: GherkinData, configuration: RuleSubConfig<t
 	if (!feature) {
 		return [];
 	}
-	const mergedConfig = _.merge({}, availableConfigs, configuration);
+	const mergedConfig = _merge({}, availableConfigs, configuration);
 
 	const errors = [] as TableAlignErrorData[];
 

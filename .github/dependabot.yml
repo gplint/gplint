@@ -31,7 +31,9 @@ updates:
       lodash:
         patterns:
           - "@types/lodash"
+          - "@types/lodash.*"
           - "lodash"
+          - "lodash.*"
       mocha:
         patterns:
           - "@types/mocha"

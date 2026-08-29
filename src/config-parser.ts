@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import _ from 'lodash';
+import _merge from 'lodash.merge';
 import stripJsonComments from 'strip-json-comments';
 import * as verifyConfig from './config-verifier.js';
 import * as logger from './logger.js';
@@ -33,7 +33,7 @@ export async function getConfiguration(args?: CliArgs, additionalRulesDirs?: str
 			}
 
 			if (options) {
-				acc[ruleName][1] = _.merge(acc[ruleName][1], JSON.parse(options));
+				acc[ruleName][1] = _merge(acc[ruleName][1], JSON.parse(options));
 			}
 
 			if (acc[ruleName].length === 1) {

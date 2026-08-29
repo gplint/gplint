@@ -1,5 +1,5 @@
 import fs from 'fs';
-import _ from 'lodash';
+import _sortBy from 'lodash.sortby';
 import {Feature, ParseError, Pickle, Envelope} from '@cucumber/messages';
 import {GherkinStreams} from '@cucumber/gherkin-streams';
 
@@ -104,7 +104,7 @@ export async function lint(files: string[], configuration?: RulesConfig, additio
 		} finally {
 			const fileErrors = {
 				filePath: fs.realpathSync(f),
-				errors: _.sortBy(perFileErrors?.getErrors(), 'line')
+				errors: _sortBy(perFileErrors?.getErrors(), 'line')
 			} as ErrorsByFile;
 
 			results.push(fileErrors);

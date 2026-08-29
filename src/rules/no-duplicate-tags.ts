@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import {Documentation, GherkinData, GherkinTaggable, RuleError} from '../types.js';
 import { featureSpread } from './utils/gherkin.js';
 
@@ -34,8 +32,8 @@ function verifyTags(node: GherkinTaggable, errors: RuleError[]) {
 	const failedTagNames = [] as string[];
 	const uniqueTagNames = [] as string[];
 	node.tags.forEach(tag => {
-		if (!_.includes(failedTagNames, tag.name)) {
-			if (_.includes(uniqueTagNames, tag.name)) {
+		if (!failedTagNames.includes(tag.name)) {
+			if (uniqueTagNames.includes(tag.name)) {
 				errors.push({
 					message: `Duplicate tags are not allowed: ${tag.name}`,
 					rule   : name,

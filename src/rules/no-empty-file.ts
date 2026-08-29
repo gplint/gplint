@@ -1,11 +1,11 @@
-import _ from 'lodash';
+import _isEmpty from 'lodash.isempty';
 import {Documentation, GherkinData, RuleError} from '../types.js';
 
 export const name = 'no-empty-file';
 
 export function run({feature}: GherkinData): RuleError[] {
 	const errors = [] as RuleError[];
-	if (_.isEmpty(feature)) {
+	if (_isEmpty(feature)) {
 		errors.push({
 			message: 'Empty feature files are disallowed',
 			rule   : name,

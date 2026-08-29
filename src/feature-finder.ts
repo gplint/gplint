@@ -1,8 +1,10 @@
-import _ from 'lodash';
-import * as glob from 'glob';
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
+
+import {globSync} from 'tinyglobby';
+
 import * as logger from './logger.js';
+import {safePathJoin} from './utils.js';
 
 export const defaultIgnoreFileName = '.gplintignore';
 const defaultIgnoredFiles = 'node_modules/**'; // Ignore node_modules by default
@@ -40,13 +42,12 @@ export function getFeatureFiles(args: string[], ignoreArg?: string[]): string[] 
 
 		const globOptions = {
 			ignore: getIgnorePatterns(ignoreArg),
-			nodir: true,
-			windowsPathsNoEscape: true,
+			onlyFiles: true,
 		};
 
-		files = files.concat(glob.sync(fixedPattern, globOptions));
+		files = files.concat(globSync(safePathJoin(fixedPattern), globOptions));
 	});
-	return _.uniq(files);
+	return [...new Set(files)];
 }
 
 export function getIgnorePatterns(ignoreArg?: string[]): string | string[] {

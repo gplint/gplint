@@ -1,23 +1,23 @@
 import os from 'os';
-import chalk from 'chalk';
-import stripAnsi from 'strip-ansi';
+import {InspectColor, styleText} from 'node:util';
+import { stripVTControlCharacters } from 'node:util';
 import table from 'text-table';
 import {ErrorsByFile, RuleErrorLevel} from '../types.js';
 
 const LEVELS_CONFIG = {
-	1: {name: 'warning', color: chalk.yellow},
-	2: {name: 'error', color: chalk.red},
-};
+	1: {name: 'warning', color: 'yellow'},
+	2: {name: 'error', color: 'red'},
+} as Record<number, {name: string, color: InspectColor}>;
 
 function stylizeError(error: RuleErrorLevel, maxLineLength: number): string[] {
 	const errorLocation = getLocationString(error);
 	const errorLocationPadded = errorLocation.padEnd(maxLineLength);
-	const errorLocationStylized = chalk.gray(errorLocationPadded);
+	const errorLocationStylized = styleText('gray', errorLocationPadded);
 	const level = LEVELS_CONFIG[error.level as 1 | 2];
 
-	const errorRuleStylized = chalk.gray(error.rule);
+	const errorRuleStylized = styleText('gray', error.rule);
 
-	return ['', errorLocationStylized, level.color(level.name), error.message, errorRuleStylized];
+	return ['', errorLocationStylized, styleText(level.color, level.name), error.message, errorRuleStylized];
 }
 
 function getLocationString(loc: RuleErrorLevel): string {
@@ -61,14 +61,14 @@ export function print(results: ErrorsByFile[]): string {
 		});
 		if (result.errors.length > 0) {
 			const maxLineLength = getMaxLocationLength(result);
-			output += chalk.underline(result.filePath);
+			output += styleText('underline', result.filePath);
 			output += os.EOL;
 
 			output += table(
 				result.errors.map(error => stylizeError(error, maxLineLength)),
 				{
 					align: ['.', 'r', 'l'],
-					stringLength: (str: string): number => stripAnsi(str).length,
+					stringLength: (str: string): number => stripVTControlCharacters(str).length,
 				}
 			);
 			output += os.EOL + os.EOL;
@@ -78,9 +78,9 @@ export function print(results: ErrorsByFile[]): string {
 	const problemsCount = warnCount + errorCount;
 
 	if (problemsCount > 0) {
-		const color = errorCount > 0 ? chalk.red : chalk.yellow;
+		const color = errorCount > 0 ? 'red' : 'yellow';
 
-		output += color.bold([
+		output += styleText(color, [
 			'\u2716 ',
 			problemsCount, pluralize(' problem', problemsCount),
 			' (',

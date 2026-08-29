@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _merge from 'lodash.merge';
 import {Tag} from '@cucumber/messages';
 import * as gherkinUtils from './utils/gherkin.js';
 import {GherkinData, RuleSubConfig, RuleError, GherkinTaggable, Documentation} from '../types.js';
@@ -16,7 +16,7 @@ export function run({feature}: GherkinData, configuration: RuleSubConfig<typeof 
 	}
 
 	const forbiddenTags = configuration.tags;
-	const mergedConfiguration = _.merge(availableConfigs, configuration);
+	const mergedConfiguration = _merge(availableConfigs, configuration);
 	const forbiddenPatterns = getForbiddenPatterns(mergedConfiguration);
 	const {language} = feature;
 	const errors = [] as RuleError[];
@@ -62,7 +62,7 @@ function checkTags(node: GherkinTaggable, language: string, forbiddenTags: strin
 }
 
 function isForbidden(tag: Tag, forbiddenTags: string[], forbiddenPatterns: RegExp[]) {
-	return _.includes(forbiddenTags, tag.name)
+	return forbiddenTags.includes(tag.name)
 		|| forbiddenPatterns.some((pattern) => pattern.test(tag.name));
 }
 

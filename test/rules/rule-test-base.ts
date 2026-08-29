@@ -13,7 +13,7 @@ type RunTestFunction = (featureFile: string, configuration: RuleSubConfig<unknow
 
 export function createRuleTest(rule: Rule, messageTemplate: string): RunTestFunction {
 	return async function runTest(featureFile: string, configuration: RuleSubConfig<unknown>, expected: RuleErrorTemplate[]): Promise<void> {
-		const expectedErrors = _.map(expected, function(error: RuleErrorTemplate) {
+		const expectedErrors = expected.map(function(error: RuleErrorTemplate) {
 			return {
 				rule: rule.name,
 				message: _.template(messageTemplate)(error.messageElements),

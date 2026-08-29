@@ -1,6 +1,6 @@
 import * as gherkinUtils from './utils/gherkin.js';
 import {featureSpread} from './utils/gherkin.js';
-import _ from 'lodash';
+import _merge from 'lodash.merge';
 import {Documentation, GherkinData, RuleError, RuleSubConfig} from '../types.js';
 import {Scenario, Step} from '@cucumber/messages';
 
@@ -13,7 +13,7 @@ export function run({feature}: GherkinData, configuration: RuleSubConfig<typeof 
 	if (!feature) {
 		return [];
 	}
-	const mergedConfiguration = _.merge({}, availableConfigs, configuration);
+	const mergedConfiguration = _merge({}, availableConfigs, configuration);
 	const {detectMissingKeywords} = mergedConfiguration;
 	const errors = [] as RuleError[];
 

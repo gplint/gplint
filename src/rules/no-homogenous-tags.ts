@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _intersection from 'lodash.intersection';
 import {Documentation, GherkinData, RuleError} from '../types.js';
 import { Examples, Feature, Rule, Scenario } from '@cucumber/messages';
 
@@ -16,7 +16,7 @@ export function run({feature}: GherkinData): RuleError[] {
 }
 
 function getTagNames(node: Feature | Rule | Scenario | Examples): readonly string[] {
-	return _.map(node.tags, tag => tag.name);
+	return node.tags.map(tag => tag.name);
 }
 
 /**
@@ -45,7 +45,7 @@ function checkHomogenousContainer(container: Feature | Rule, errors: RuleError[]
 				exampleTags.push(getTagNames(example));
 			});
 
-			const homogenousExampleTags = _.intersection(...exampleTags);
+			const homogenousExampleTags = _intersection(...exampleTags);
 			if (homogenousExampleTags.length) {
 				errors.push({
 					message: `All Examples of a Scenario Outline have the same tag(s), they should be defined on the Scenario Outline instead: ${homogenousExampleTags.join(', ')}`,
@@ -61,7 +61,7 @@ function checkHomogenousContainer(container: Feature | Rule, errors: RuleError[]
 		}
 	});
 
-	const homogenousTags = _.intersection(...childrenTags);
+	const homogenousTags = _intersection(...childrenTags);
 	if (homogenousTags.length) {
 		errors.push({
 			message: `All ${childrenName} on this ${containerName} have the same tag(s), they should be defined on the ${containerName} instead: ${homogenousTags.join(', ')}`,

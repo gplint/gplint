@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import * as logger from './../logger.js';
 import {Documentation, ErrorData, FileData, GherkinData, RuleError, RuleSubConfig} from '../types.js';
 
@@ -12,12 +11,12 @@ type NewLineAtEofErrorData = ErrorData
 
 export function run({file}: GherkinData, configuration: RuleSubConfig<string>): RuleError[] {
 	const errors = [] as RuleError[];
-	if (_.indexOf(availableConfigs, configuration) === -1) {
+	if (availableConfigs.indexOf(configuration) === -1) {
 		logger.boldError(`${name} requires an extra configuration value.\nAvailable configurations: ${availableConfigs.join(', ')}\nFor syntax please look at the documentation.`);
 		process.exit(1);
 	}
 
-	const hasNewLineAtEOF = _.last(file.lines) === '';
+	const hasNewLineAtEOF = file.lines.at(-1) === '';
 	let errormsg = '';
 	if (hasNewLineAtEOF && configuration === 'no') {
 		errormsg = 'New line at EOF (end of file) is not allowed';
@@ -41,7 +40,7 @@ export function fix(error: NewLineAtEofErrorData, file: FileData, configuration:
 	if (configuration === 'yes') {
 		file.lines.push('');
 	} else if (configuration === 'no') {
-		while (_.last(file.lines) === '') {
+		while (file.lines.at(-1) === '') {
 			file.lines.pop();
 		}
 	}

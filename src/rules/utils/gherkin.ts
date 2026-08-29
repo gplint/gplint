@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _findKey from 'lodash.findkey';
 import * as Gherkin from '@cucumber/gherkin';
 import { Examples, Feature, Pickle, Rule, Scenario, TableRow } from '@cucumber/messages';
 import {GherkinKeyworded, GherkinNode, GherkinTaggable} from '../../types.js';
@@ -35,7 +35,7 @@ export function getNodeType(node: GherkinKeyworded, language: string): string {
 export function getLanguageInsensitiveKeyword(node: GherkinKeyworded, language = ''): string | undefined {
 	const languageMapping = Gherkin.dialects[language];
 
-	return _.findKey(languageMapping, values => values instanceof Array && values.includes(node.keyword));
+	return _findKey(languageMapping, values => values instanceof Array && values.includes(node.keyword));
 }
 
 export function getNodeForPickle(feature: Feature, pickle: Pickle, forceExamplesLevel = false): GherkinNode | Examples | TableRow | undefined {

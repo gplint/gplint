@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import {Pickle, Scenario} from '@cucumber/messages';
 import * as gherkinUtils from './utils/gherkin.js';
 import {featureSpread, getPicklesForNode} from './utils/gherkin.js';
@@ -37,7 +36,7 @@ export function run({
 
 	const errors = [] as RuleError[];
 
-	const scope = configuration && _.isString(configuration) ? configuration : 'anywhere';
+	const scope = configuration && typeof configuration === 'string' ? configuration : 'anywhere';
 	const compile = scope.endsWith('-compile');
 
 	function loopScenarios(scenarios: (Scenario | Pickle)[]) {
