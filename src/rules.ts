@@ -2,7 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 
-import { glob } from 'tinyglobby';
+import {glob} from 'tinyglobby';
+
 import _isNumber from 'lodash.isnumber';
 import _toNumber from 'lodash.tonumber';
 
@@ -20,6 +21,7 @@ import {
 } from './types.js';
 import { RuleErrors } from './errors.js';
 import { readAndParseFile } from './linter.js';
+import {safePathJoin} from './utils.js';
 
 const LEVELS = [
 	'off',
@@ -49,12 +51,6 @@ export async function getAllRules(additionalRulesDirs?: string[]): Promise<Rules
 		}
 	}
 	return rules;
-}
-
-function safePathJoin(...paths: string[]) {
-	const fullPath = path.join(...paths);
-
-	return path.sep === path.posix.sep ? fullPath : fullPath.replaceAll(path.sep, path.posix.sep);
 }
 
 export async function getRule(rule: string, additionalRulesDirs?: string[]): Promise<Rule | undefined> {
