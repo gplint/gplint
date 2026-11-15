@@ -31,7 +31,7 @@
 		"lint"
 	],
 	"type": "module",
-	"exports": "./build/index.js",
+	"types": "./build/types.d.ts",
 	"bin": {
 		"gplint": "bin/gplint.js"
 	},
@@ -49,7 +49,6 @@
 		"test:unit": "cross-env NODE_ENV=test mocha --recursive",
 		"test:unit:cov": "c8 npm run test:unit"
 	},
-	"types": "./build/index.d.ts",
 	"dependencies": {
 		"@cucumber/gherkin": "42.0.1",
 		"@cucumber/gherkin-streams": "7.0.1",
