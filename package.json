@@ -50,7 +50,7 @@
 		"test:unit:cov": "c8 npm run test:unit"
 	},
 	"dependencies": {
-		"@cucumber/gherkin": "42.0.1",
+		"@cucumber/gherkin": "43.0.0",
 		"@cucumber/gherkin-streams": "7.0.1",
 		"@cucumber/messages": "35.0.0",
 		"lodash.camelcase": "^4.3.0",
